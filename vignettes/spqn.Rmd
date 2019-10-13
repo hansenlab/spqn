@@ -1,0 +1,285 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
+## Space quantile normalization
+```{r,message=F,include=FALSE}
+library(WGCNA)
+library(ggridges)
+library(viridis)
+library(ggplot2)
+library(matrixStats)
+root="/Users/yiwang/Dropbox/meanCoexp_Rpackage-master"
+source(paste0(root,"/R/functions_2d_quantile.R"))
+source(paste0(root,"/R/functions_evaluation.r"))
+dir_data=paste0(root,"/data/")
+dir_output=paste0(root,"/data/")
+```
+
+### Generate correlation matrix 
+####  load raw counts, normalize and filter low expression genes(average(log2cpm)>0)
+```{r, message = F, fig.width = 4, fig.height = 4}
+list_tissues=c("Adipose_Subcutaneous","Adrenal_Gland","Artery_Tibial","Brain_Cerebellum",
+               "Brain_Cortex", "Breast_Mammary","Colon_Transverse","Esophagus_Mucosa","Heart_Left_Ventricle")
+i=1
+n_PC=27
+name_tissue=list_tissues[[i]]
+name_var= paste0("counts_gtex_",name_tissue)
+load(paste0(dir_data, name_var,".RData" ))
+list_filt=rpm_filt_v2(eval(as.name(name_var)))
+# extract filtered raw and log2cpm counts
+log2cpm_kp=list_filt$counts_log2cpm_keep
+keep_filt=list_filt$keep
+```
+
+#### remove PCs
+```{r, message = F, fig.width = 4, fig.height = 4}
+if(n_PC==0){log2cpm_kp_rmPC=log2cpm_kp}else{log2cpm_kp_rmPC = removePCs(log2cpm_kp,n_PC)}
+```
+
+#### sort genes by mean(log2cpm), and generate correlation matrix
+```{r, message = F, fig.width = 4, fig.height = 4}
+set.seed(1)
+sample_random=sample(1:nrow(log2cpm_kp),4000,replace=F)
+log2cpm_kp_rmPC=log2cpm_kp_rmPC[sample_random,]
+log2cpm_kp=log2cpm_kp[sample_random,]
+corr_ori=cor(t(log2cpm_kp_rmPC[order(rowMeans(log2cpm_kp)),]))
+ave_logcpm_kp=rowMeans(log2cpm_kp)[order(rowMeans(log2cpm_kp))]
+```
+
+########################################################################
+### evaluation for ori
+#### IQR calculation for cor_ori
+```{r, message = F, fig.width = 4, fig.height = 4}
+list_IQR_ori = cal_m_sd_IQR(corr_ori,ave_logcpm_kp)
+#sd_grp_ori=list_IQR_ori$sd_cor_mat
+IQR_grp_ori=list_IQR_ori$IQR_cor_mat
+grp_mean=list_IQR_ori$grp_mean
+```
+
+####ridgeplot for diagonal in cor_ori
+```{r, message = F, fig.width = 4, fig.height = 4}
+plot_diagonal_ridge4(corr_ori)
+```
+
+####boxplot - IQR for cor_ori
+```{r, message = F, fig.width = 4, fig.height = 4}
+box_plot(IQR_grp_ori,round(grp_mean,1))
+```
+
+####qqplot for cor_ori
+```{r, message = F, fig.width = 3, fig.height = 3}
+for(j in 1:10){
+    qqplot_density2(corr_ori,j,j)
+}
+```
+
+#### min-IQR relationship for cor_ori 
+```{r, message = F, fig.width = 4, fig.height = 4}
+mean_min_ori=c()
+IQR_vec_ori=c()
+for(i in 1:10){
+  for(j  in i:10){
+      mean_min_ori=c(mean_min_ori,grp_mean[i])
+      IQR_vec_ori=c(IQR_vec_ori,IQR_grp_ori[i,j])
+  }
+}
+range_y=range(IQR_vec_ori)
+plot(mean_min_ori,IQR_vec_ori,xlab="min(average(log2CPM))",ylab="IQR",cex.lab=1.5,cex.axis=1.2,col="blue",ylim=range_y)
+```
+
+#### distribution of signals conditional on expression level - cor_ori, top 0.1% correlations
+```{r, message = F, fig.width = 4, fig.height = 4}
+plot_signal_condition_exp(corr_ori,0.1)
+```
+
+########################################################################
+### Spacial quantile normzalization
+```{r, message = F, fig.width = 4, fig.height = 4}
+##### step 1, asssign running bins
+cor_est=quantile_norm(corr_ori,ngrp=20,size_grp=300,ref_grp=18)
+```
+
+
+########################################################################
+### evaluation for cor_adj
+####IQR calculation for cor_adj
+```{r, message = F, fig.width = 4, fig.height = 4}
+list_IQR_adj = cal_m_sd_IQR(cor_est,ave_logcpm_kp)
+#sd_grp_adj=list_IQR_adj$sd_cor_mat
+IQR_grp_adj=list_IQR_adj$IQR_cor_mat
+```
+
+####ridgeplot for diagonal in cor_est
+```{r, message = F, fig.width = 4, fig.height = 4}
+plot_diagonal_ridge4(cor_est)
+```
+
+####boxplot - IQR for cor_adj
+```{r, message = F, fig.width = 4, fig.height = 4}
+box_plot(IQR_grp_adj,round(grp_mean,1))
+```
+
+####qqplot for cor_adj
+```{r, message = F, fig.width = 3, fig.height = 3}
+for(j in 1:10){
+    qqplot_density2(cor_est,j,j)
+}
+```
+
+#### min-IQR relationship for cor_adj
+```{r, message = F, fig.width = 4, fig.height = 4}
+mean_min_adj=c()
+IQR_vec_adj=c()
+for(i in 1:10){
+  for(j  in i:10){
+      mean_min_adj=c(mean_min_adj,grp_mean[i])
+      IQR_vec_adj=c(IQR_vec_adj,IQR_grp_adj[i,j])
+  }
+}
+range_y=range(IQR_vec_ori)
+plot(mean_min_adj,IQR_vec_adj,xlab="min(average(log2CPM))",ylab="IQR",cex.lab=1.5,cex.axis=1.2,col="red",ylim=range_y)
+```
+
+#### distribution of signals conditional on expression level - cor_est, top 0.1% correlations
+```{r, message = F, fig.width = 4, fig.height = 4}
+plot_signal_condition_exp(cor_est,0.1)
+```
+
+
+########################################################################
+### compare cor_ori and cor_adj
+#### expression level of signals - top 0.1% correlations
+```{r, message = F, fig.width = 4, fig.height = 4}
+d0=plot_exp_signal(corr_ori,cor_est,0.1)
+```
+
+########################################################################
+### compare among tissues
+#### IQR vs. sample size
+```{r, message = F,eval=F}
+list_nsv=c(27,15,25,16,12,12,9,21,13)
+df_nsample_IQR=data.frame()
+for(i in 1:9){
+  nsva=list_nsv[i]
+  for(n_PC in c(0,4,nsva)){
+    name_var= paste0("counts_gtex_",list_tissues[[i]])
+    load(paste0(dir_data, name_var,".RData" ))
+    df_nsample_IQR_tmp=cal_IQR_nsam(rpm_filt_v2(eval(as.name(name_var)))$counts_log2cpm_keep,n_PC,nsubsample=1000)
+    if(nrow(df_nsample_IQR)==0){df_nsample_IQR=df_nsample_IQR_tmp}else{
+      df_nsample_IQR=rbind(df_nsample_IQR,df_nsample_IQR_tmp)}
+  }
+  print(i)
+}
+save(df_nsample_IQR,file=paste0(dir_output,"df_nsample_IQR.RData"))
+```
+
+
+```{r, message = F, fig.width = 4, fig.height = 4}
+load(paste0(dir_output,"df_nsample_IQR.RData"))
+#removing 0PCs
+plot_nsam_IQR(df_nsample_IQR,nPC=0)
+#removing 4 PCs
+plot_nsam_IQR(df_nsample_IQR,nPC=4)
+#removing suggested number of PCs by sva
+plot_nsam_IQR(df_nsample_IQR,nPC="sva")
+```
+
+####bias and variance with different numbers of PCs removed
+```{r, message = F,eval=F}
+for(i in 1:9){
+  ######load data and filtration
+  name_tissue=list_tissues[[i]]
+  # load and input raw counts, normalize and filter low expression genes(average(log2cpm)>0)
+  name_var= paste0("counts_gtex_",name_tissue)
+  load(paste0(dir_data, name_var,".RData" ))
+  list_filt=rpm_filt_v2(eval(as.name(name_var)))
+  log2cpm_kp=list_filt$counts_log2cpm_keep
+  
+  # calculate center and variance for 0-50 PCs
+  list_center_cor=list_var_cor=c()
+  
+  for(n_PC in 0:50){
+    if(n_PC==0){log2cpm_kp_rmPC=log2cpm_kp}else{log2cpm_kp_rmPC = removePCs(log2cpm_kp,n_PC)}
+    corr_ori=cor(t(log2cpm_kp_rmPC))
+    corr_ori=corr_ori[upper.tri(corr_ori) ]
+    list_center_cor=c(list_center_cor,mean(corr_ori))
+    list_var_cor=c(list_var_cor,var(corr_ori))
+    print(paste0(i,"th tissue,",n_PC,"PCs"))
+  }
+  save(list_center_cor,file=paste0(dir_output,"list_center_cor_",i,"_th_tissue.RData"))
+  save(list_var_cor,file=paste0(dir_output,"list_var_corr_",i,"_th_tissue.RData"))
+}
+```
+
+
+```{r, message = F, fig.width = 4, fig.height = 4}
+i=1
+load(paste0(dir_output,"list_center_cor_",i,"_th_tissue.RData"))
+load(paste0(dir_output,"list_var_cor_",i,"_th_tissue.RData"))
+  
+plot(0:50,list_center_cor,xlab="number of PCs removed",ylab="average(correlations)",cex.lab=1.5,cex.axis=1.5, pch=1)
+plot(0:50,list_var_cor,xlab="number of PCs removed",ylab="var(correlations)",cex.lab=1.5,cex.axis=1.5, pch=1)
+```
+
+
+#### expression level of signals - PPI dataset
+```{r, message = F, fig.width = 4, fig.height = 4,eval=F}
+for(i in 1:9){
+  HURI=read_tsv(paste0(dir_output,"dat_HURI_PPI_full.tsv"))
+  load(paste0(dir_data,"gene_list_gtex.RData" ))
+  load(paste0(dir_data, name_var,".RData" ))
+
+  name_tissue=tissue_list[[i]]
+  name_var= paste0("counts_gtex_",name_tissue)
+  list_filt=rpm_filt_v2(eval(as.name(name_var)))
+
+  genes_ensemble_keep=gene_list_gtex$Name[list_filt$keep]
+  genes_ensemble_keep=strsplit(as.vector(genes_ensemble_keep),".",fixed=TRUE)
+  genes_ensemble_keep=matrix(unlist(genes_ensemble_keep), ncol = 2, byrow = TRUE)[,1]
+
+  ## map gene name to gene expression level for GTEX data
+  ave_logcpm_kp=rowMeans(list_filt$counts_log2cpm_keep)
+  PPI_overlap=HURI[which(HURI$gene1 %in% genes_ensemble_keep2_format & HURI$gene2%in% genes_ensemble_keep2_format),]
+  
+  ## match expression level to the pairs of PPI data
+  names(ave_logcpm_kp)=genes_ensemble_keep2_format
+  exp_level_gene1_PPI= ave_logcpm_kp[PPI_overlap$gene1]
+  exp_level_gene2_PPI= ave_logcpm_kp[PPI_overlap$gene2]
+  ave_exp_PPI=(exp_level_gene1_PPI+exp_level_gene2_PPI)/2
+  dist_ave_exp_PPI=density(ave_exp_PPI)
+  
+  save(paste0(dir_output,i,"_th_tissue_dist_ave_exp_PPI.RData" ))
+}
+
+```
+
+```{r, message = F, fig.width = 4, fig.height = 4}
+i=1
+load(paste0(dir_output,i,"_th_tissue_dist_ave_exp_PPI.RData" ))
+load(paste0(dir_output,n_PC,"PCs_",i,"_d0.RData" ))
+
+par(oma = c(0,0,0,0), mar = c(5,5,0.6,0.6))
+plot(d0,  xaxt = "n",  bty = "n",yaxt = "n",col="black",main="",xlim=xrange_all_svaPC,ylim=yrange_all_svaPC, cex.lab=1.5, cex.axis=1.1,xlab="average expression level (log2CPM)",ylab = "density")
+lines(dist_ave_exp_PPI,col="blue")
+axis(side =1, at = c(0,5,10,15),cex.axis=1)
+axis(side =2, at = c(0.1,0.2),cex.axis=1)
+legend("topright",legend=c("background","PPI"),col=c("black","blue"),lty=1)
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
