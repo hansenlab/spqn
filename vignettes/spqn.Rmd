@@ -16,7 +16,8 @@ output:
     toc_float: true
 ---
 
-## Space quantile normalization
+# Preliminaries
+
 ```{r, eval=FALSE, message=FALSE, include=FALSE}
 library(WGCNA)
 library(ggridges)
@@ -60,23 +61,22 @@ save(exprsData_levels, file = "../data/exprsData_levels.rda")
 
 ```
 
+Let's load the package and some example data.
 
-```{r}
+```{load r, message=FALSE}
 library(spqn)
 library(spqnDataTemp)
 library(ggplot2)
 library(ggridges)
-library(matrixStats)
 data(exprsData)
 data(exprsData_levels)
 corExprs <- cor(t(exprsData))
 ```
 
+# Mean-correlation relationship
 
 
-########################################################################
-### evaluation for ori
-#### IQR calculation for cor_ori
+IQR calculation for cor_ori
 ```{r, message = F, fig.width = 4, fig.height = 4}
 list_IQR_ori = cal_m_sd_IQR(corExprs, exprsData_levels)
 #sd_grp_ori=list_IQR_ori$sd_cor_mat
@@ -84,24 +84,24 @@ IQR_grp_ori=list_IQR_ori$IQR_cor_mat
 grp_mean=list_IQR_ori$grp_mean
 ```
 
-####ridgeplot for diagonal in cor_ori
+Ridgeplot for diagonal in cor_ori
 ```{r, message = F, fig.width = 4, fig.height = 4}
 plot_diagonal_ridge4(corExprs)
 ```
 
-####boxplot - IQR for cor_ori
+Boxplot - IQR for cor_ori
 ```{r, message = F, fig.width = 4, fig.height = 4}
 box_plot(IQR_grp_ori,round(grp_mean,1))
 ```
 
-####qqplot for cor_ori
+QQplot for cor_ori
 ```{r, message = F, fig.width = 3, fig.height = 3}
 for(j in 1:10){
     qqplot_density2(corExprs,j,j)
 }
 ```
 
-#### min-IQR relationship for cor_ori 
+min-IQR relationship for cor_ori 
 ```{r, message = F, fig.width = 4, fig.height = 4}
 mean_min_ori=c()
 IQR_vec_ori=c()
@@ -115,45 +115,43 @@ range_y=range(IQR_vec_ori)
 plot(mean_min_ori,IQR_vec_ori,xlab="min(average(log2CPM))",ylab="IQR",cex.lab=1.5,cex.axis=1.2,col="blue",ylim=range_y)
 ```
 
-#### distribution of signals conditional on expression level - cor_ori, top 0.1% correlations
+distribution of signals conditional on expression level - cor_ori, top 0.1% correlations
 ```{r, message = F, fig.width = 4, fig.height = 4}
 plot_signal_condition_exp(corExprs,0.1)
 ```
 
-########################################################################
-### Spacial quantile normzalization
-```{r, message = F, fig.width = 4, fig.height = 4}
-##### step 1, asssign running bins
+# Spatial quantile normzalization
+
+```{spqn r, message = F, fig.width = 4, fig.height = 4}
 cor_est=quantile_norm(corExprs,ngrp=20,size_grp=300,ref_grp=18)
 ```
 
+# Spatial quantile normalization removes the mean-correlation relationship
 
-########################################################################
-### evaluation for cor_adj
-####IQR calculation for cor_adj
+IQR calculation for cor_adj
 ```{r, message = F, fig.width = 4, fig.height = 4}
 list_IQR_adj = cal_m_sd_IQR(cor_est, exprsData_levels)
 IQR_grp_adj=list_IQR_adj$IQR_cor_mat
 ```
 
-####ridgeplot for diagonal in cor_est
+ridgeplot for diagonal in cor_est
 ```{r, message = F, fig.width = 4, fig.height = 4}
 plot_diagonal_ridge4(cor_est)
 ```
 
-####boxplot - IQR for cor_adj
+boxplot - IQR for cor_adj
 ```{r, message = F, fig.width = 4, fig.height = 4}
 box_plot(IQR_grp_adj,round(grp_mean,1))
 ```
 
-####qqplot for cor_adj
+qqplot for cor_adj
 ```{r, message = F, fig.width = 3, fig.height = 3}
 for(j in 1:10){
     qqplot_density2(cor_est,j,j)
 }
 ```
 
-#### min-IQR relationship for cor_adj
+min-IQR relationship for cor_adj
 ```{r, message = F, fig.width = 4, fig.height = 4}
 mean_min_adj=c()
 IQR_vec_adj=c()
@@ -167,15 +165,14 @@ range_y=range(IQR_vec_ori)
 plot(mean_min_adj,IQR_vec_adj,xlab="min(average(log2CPM))",ylab="IQR",cex.lab=1.5,cex.axis=1.2,col="red",ylim=range_y)
 ```
 
-#### distribution of signals conditional on expression level - cor_est, top 0.1% correlations
+distribution of signals conditional on expression level - cor_est, top 0.1% correlations
 ```{r, message = F, fig.width = 4, fig.height = 4}
 plot_signal_condition_exp(cor_est,0.1)
 ```
 
 
-########################################################################
-### compare cor_ori and cor_adj
-#### expression level of signals - top 0.1% correlations
+compare cor_ori and cor_adj
+expression level of signals - top 0.1% correlations
 ```{r, message = F, fig.width = 4, fig.height = 4}
 d0=plot_exp_signal(corExprs,cor_est,exprsData_levels,0.1)
 ```

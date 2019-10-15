@@ -1,1 +1,9 @@
+import("ggplot2")
+import("ggridges")
+importFrom("graphics", "abline", "legend", "lines", "plot", "points")
+importFrom("stats", "IQR", "cor", "density", "qqplot", "sd")
+importFrom("utils", "tail")
+importFrom("matrixStats", "rowMedians")
+importFrom("WGCNA", "removePrincipalComponents")
+
 exportPattern("^[^\\.]")

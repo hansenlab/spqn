@@ -202,8 +202,8 @@ plot_signal_condition_exp<-function(cor_mat,percent_sig){
 }
 
 
-cal_IQR_nsam<-function(log2cpm,nPC,nsubsample=1000){
-  if(n_PC==0){log2cpm_kp_rmPC=log2cpm}else{log2cpm_kp_rmPC = removePCs(log2cpm,nPC)}
+cal_IQR_nsam<-function(log2cpm,n_PC,nsubsample=1000){
+  if(n_PC==0){log2cpm_kp_rmPC=log2cpm}else{log2cpm_kp_rmPC = removePCs(log2cpm,n_PC)}
   
   set.seed(1)
   sample_random=sample(1:nrow(log2cpm),nsubsample,replace=F)
@@ -216,8 +216,8 @@ cal_IQR_nsam<-function(log2cpm,nPC,nsubsample=1000){
   nsample=rep(ncol(log2cpm),100)
   IQR_ori=as.vector(cal_m_sd_IQR(corr_ori,ave_logcpm_kp)$IQR_cor_mat)
   IQR_adj=as.vector(cal_m_sd_IQR(cor_est,ave_logcpm_kp)$IQR_cor_mat)
-  df_nsam_IQR=data.frame(IQR_ori,IQR_adj,nPC,nsample)
-  if(nPC %in% c(0,4)){df_nsam_IQR$nPC=nPC}else(df_nsam_IQR$nPC="sva")
+  df_nsam_IQR=data.frame(IQR_ori,IQR_adj,n_PC,nsample)
+  if(n_PC %in% c(0,4)){df_nsam_IQR$nPC=n_PC}else(df_nsam_IQR$nPC="sva")
   df_nsam_IQR
 }
 

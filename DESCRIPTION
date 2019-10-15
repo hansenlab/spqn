@@ -4,12 +4,18 @@ Title: Spatial quantile normalization
 Description: Spatial quantile normalization for co-expression analysis.
 Authors@R: c(person("Yi", "Wang", role = c("cre", "aut"), email = "mdabrow1@jhu.edu"),
 	     person(c("Kasper", "Daniel"), "Hansen", role = "aut"))
-Depends: BiocGenerics
+Depends: ggplot2,
+         ggridges
+Imports: graphics,
+         stats,
+	 utils,
+	 matrixStats,
+	 WGCNA
 Suggests: BiocStyle,
 	  knitr,
 	  rmarkdown,
 	  tools,
-	  spqnData
+	  spqnDataTemp
 VignetteBuilder: knitr
 License: Artistic-2.0
 URL: https://github.com/hansenlab/spqn
