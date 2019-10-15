@@ -118,7 +118,7 @@ plot_diagonal_ridge4<-function(cor_matrix,ngrp=10){
 
 
 
-plot_exp_signal<-function(cor_or,cor_es,percent_sig){
+plot_exp_signal<-function(cor_or,cor_es,ave_logcpm_kp,percent_sig){
   
   ind_up=which(upper.tri(cor_or),arr.ind = T)
   n_up=nrow(ind_up)  

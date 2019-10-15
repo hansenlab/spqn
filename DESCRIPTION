@@ -2,15 +2,14 @@ Package: spqn
 Version: 0.0.1
 Title: Spatial quantile normalization
 Description: Spatial quantile normalization for co-expression analysis.
-Authors@R: c(person("Yi", "Wang"), role = "cre",
-             email = "SOMETHING.edu"),
-	     person(c("Kasper", "Daniel"), "Hansen", role = c("aut"))
+Authors@R: c(person("Yi", "Wang", role = c("cre", "aut"), email = "mdabrow1@jhu.edu"),
+	     person(c("Kasper", "Daniel"), "Hansen", role = "aut"))
 Depends: BiocGenerics
 Suggests: BiocStyle,
 	  knitr,
 	  rmarkdown,
-	  tools
-Imports: 
+	  tools,
+	  spqnData
 VignetteBuilder: knitr
 License: Artistic-2.0
 URL: https://github.com/hansenlab/spqn
