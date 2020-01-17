@@ -4,7 +4,8 @@ shorttitle: "spqn guide"
 author:
   - Yi Wang
   - Kasper D. Hansen
-package: spqn
+  -Stephanie C. Hicks
+package: SpQN
 abstract: >
   A guide to using spqn for co-expression analysis
 vignette: >
