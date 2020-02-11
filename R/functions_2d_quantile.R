@@ -59,7 +59,7 @@ create_bins <- function(n_genes, n_bins = 20, size_bins = 400) {
 
 
 get_grps<-function(avelog2cpm,ngrp=20,size_grp=400){
-  ngene=length(avelog2cpm) 
+  ngene=nrow(avelog2cpm) 
   grp_label=cut(1:(ngene-size_grp+1),ngrp-1)
   grp_loc0=split(1:(ngene-size_grp+1),grp_label)
   grp_loc=list()
