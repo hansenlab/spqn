@@ -12,6 +12,9 @@ vignette: >
   %\VignetteIndexEntry{spqn User's Guide}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}  
+output:
+  BiocStyle::html_document:
+    toc_float: true
 ---
 
 # Preliminaries
@@ -77,6 +80,53 @@ min-IQR relationship
 ```{r, message = FALSE, fig.width = 4, fig.height = 4}
 IQR_unlist <- unlist(lapply(1:10, function(ii) IQR_list$IQR_cor_mat[ii, ii:10]))
 plot(rep(IQR_list$grp_mean, times = 1:10),
+     IQR_unlist,
+     xlab="min(average(log2CPM))", ylab="IQR", cex.lab=1.5, cex.axis=1.2, col="blue")
+```
+
+
+# Spatial quantile normalization
+
+```{r spqn, message = FALSE, fig.width = 4, fig.height = 4}
+cor_m_spqn <- quantile_norm(cor_m, ngrp=20, size_grp=300, ref_grp=18)
+```
+
+
+Ridgeplot for diagonal
+```{r, message = F, fig.width = 4, fig.height = 4}
+plot_diagonal_ridge4(cor_m_spqn)
+```
+
+Ridgeplot for background and signal
+```{r, message = F, fig.width = 4, fig.height = 4}
+plot_signal_condition_exp(cor_m_spqn, 0.1)
+```
+
+We now compute IQRs across the correlation matrix and plot them
+
+
+```{r, message=FALSE}
+IQR_spqn_list <- cal_m_sd_IQR(cor_m_spqn, rowData(gtex.4k)$ave_logrpkm)
+
+```
+
+
+```{r, message=FALSE, fig.width=4, fig.height=4}
+boxplot(IQR_spqn_list$IQR_cor_mat)
+```
+
+
+QQplots
+```{r, message = FALSE, fig.width = 3, fig.height = 3}
+for(j in 1:10){
+    qqplot_density2(cor_m_spqn, j, j)
+}
+```
+
+min-IQR relationship
+```{r, message = FALSE, fig.width = 4, fig.height = 4}
+IQR_unlist <- unlist(lapply(1:10, function(ii) IQR_spqnlist$IQR_cor_mat[ii, ii:10]))
+plot(rep(IQR_spqn_list$grp_mean, times = 1:10),
      IQR_unlist,
      xlab="min(average(log2CPM))", ylab="IQR", cex.lab=1.5, cex.axis=1.2, col="blue")
 ```
