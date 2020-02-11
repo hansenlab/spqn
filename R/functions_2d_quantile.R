@@ -137,18 +137,13 @@ get_bin_rank<-function(cor_obs,grp_loc,grp_loc_inner,cor_ref){
       
       
       
-      print(c(i,j))
     }
   }
   #rank_bin[lower.tri(rank_bin)]=t(rank_bin)[lower.tri(rank_bin)]
   #diag(rank_bin)=1
   rank_bin
 }
-#rank_bin <- get_bin_rank(cor_mat, group_loc, group_loc_adj, cor_ref)
-# cor_obs=cor_mat
-# grp_loc=group_loc
-# grp_loc_inner=group_loc_adj
-# cor_ref=cor_ref
+
 ##### step 4, transform rank to cor_est 
 est_cor<-function(rank_bin,cor_ref){
   
@@ -194,11 +189,9 @@ quantile_norm <- function(cor_mat, ngrp,size_grp, ref_grp){
     ## step 3, get rank for each running bin
     cor_ref <- cor_mat[group_loc[[ref_grp]], group_loc[[ref_grp]]]
     rank_bin <- get_bin_rank(cor_mat, group_loc, group_loc_adj, cor_ref)
-    ##6s for 20*20 bins, 4000 genes; 2min for all genes,ngrp=20,size_grp=1000
 
     ## step 4, transform rank to cor_adj
     cor_est <- est_cor(rank_bin, cor_ref)
-    ##6s for 20*20 bins, 4000 genes; 3.5min for all genes, 20*20 bins,siez_grp=100
 
     cor_est
 }
