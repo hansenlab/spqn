@@ -51,7 +51,6 @@ First compare the distribution of correlations in each expression level
 plot_diagonal_ridge4(cor_m)
 ```
 
-Ridgeplot for background and signal
 Compare the distribution of correlations in signals and background, stratified by expression level
 ```{r, message = F, fig.width = 4, fig.height = 4}
 plot_signal_condition_exp(cor_m, 0.1)
