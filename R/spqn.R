@@ -1,7 +1,8 @@
-removePCs <- function(counts_logrpm, num_PCs = 4){
+# remove top principle components from the expression matrix
+removePCs <- function(exp_logrpm, num_PCs = 4){
   if(num_PCs > 0) {
-    counts_removePCs= t(removePrincipalComponents( scale(t(counts_logrpm)), num_PCs))
-    return(counts_removePCs)} else{return(counts_logrpm)}
+    exp_removePCs= t(removePrincipalComponents( scale(t(exp_logrpm)), num_PCs))
+    return(exp_removePCs)} else{return(exp_logrpm)}
 }
 
 
