@@ -46,11 +46,13 @@ cor_m <- cor(t(assay(gtex.4k)))
 We now recreate a number of diagnostic plots which illustrate the mean-correlation relationship
 
 Ridgeplot for diagonal
+First compare the distribution of correlations in each expression level
 ```{r, message = F, fig.width = 4, fig.height = 4}
 plot_diagonal_ridge4(cor_m)
 ```
 
 Ridgeplot for background and signal
+Compare the distribution of correlations in signals and background, stratified by expression level
 ```{r, message = F, fig.width = 4, fig.height = 4}
 plot_signal_condition_exp(cor_m, 0.1)
 ```
@@ -58,18 +60,20 @@ plot_signal_condition_exp(cor_m, 0.1)
 We now compute IQRs across the correlation matrix and plot them
 
 
+Calculate IQR of correlations for each expression level
 ```{r, message=FALSE}
 IQR_list <- cal_m_sd_IQR(cor_m, rowData(gtex.4k)$ave_logrpkm)
 
 ```
 
-
+Compare the IQR of correlations between genes in each expression level
 ```{r, message=FALSE, fig.width=4, fig.height=4}
 boxplot(IQR_list$IQR_cor_mat)
 ```
 
 
 QQplots
+Compare the distribution of each bin and the reference bin
 ```{r, message = FALSE, fig.width = 3, fig.height = 3}
 for(j in 1:10){
     qqplot_density2(cor_m, j, j)
@@ -77,6 +81,7 @@ for(j in 1:10){
 ```
 
 min-IQR relationship
+relationship between the lowest of the two expression bins and IQR 
 ```{r, message = FALSE, fig.width = 4, fig.height = 4}
 IQR_unlist <- unlist(lapply(1:10, function(ii) IQR_list$IQR_cor_mat[ii, ii:10]))
 plot(rep(IQR_list$grp_mean, times = 1:10),
@@ -84,14 +89,12 @@ plot(rep(IQR_list$grp_mean, times = 1:10),
      xlab="min(average(log2CPM))", ylab="IQR", cex.lab=1.5, cex.axis=1.2, col="blue")
 ```
 
-
-# Spatial quantile normalization
-
+To correct the mean-correlation dependency, applying SPQN in the correlation matrix, such that correlations of genes follows approximately the same distribution across different expression levels.
 ```{r spqn, message = FALSE, fig.width = 4, fig.height = 4}
 cor_m_spqn <- quantile_norm(cor_m, ngrp=20, size_grp=300, ref_grp=18)
 ```
 
-
+Check the mean-correlation dependency after applying SPQN.
 Ridgeplot for diagonal
 ```{r, message = F, fig.width = 4, fig.height = 4}
 plot_diagonal_ridge4(cor_m_spqn)
