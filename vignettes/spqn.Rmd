@@ -72,16 +72,15 @@ boxplot(IQR_list$IQR_cor_mat)
 ```
 
 
-QQplots
-Compare the distribution of each bin and the reference bin
+
+Compare the distribution of each bin and the reference bin, using qqplot
 ```{r, message = FALSE, fig.width = 3, fig.height = 3}
 for(j in 1:10){
     qqplot_density2(cor_m, j, j)
 }
 ```
 
-min-IQR relationship
-relationship between the lowest of the two expression bins and IQR 
+Find the relationship between the lowest of the two expression bins and IQR 
 ```{r, message = FALSE, fig.width = 4, fig.height = 4}
 IQR_unlist <- unlist(lapply(1:10, function(ii) IQR_list$IQR_cor_mat[ii, ii:10]))
 plot(rep(IQR_list$grp_mean, times = 1:10),
