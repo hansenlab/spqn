@@ -103,11 +103,11 @@ get_bin_rank<-function(cor_obs,grp_loc,grp_loc_inner,cor_ref){
       
       rank_bin_tmp[1:l_cor_tmp]=rank(cor_bin_tmp[1:l_cor_tmp])
       
-      #Number of diagonals(of full correlation matrix) contained in the bin
+      # Number of diagonals(of full correlation matrix) contained in the bin
       n_diag=sum(grp_loc[[i]] %in% grp_loc[[j]])
       
-      #Scale the rank of each bin to same scale as rank(cor_ref),
-      #After scaling, rank_bin could contain non-integars
+      # Scale the rank of each bin to same scale as rank(cor_ref),
+      # After scaling, rank_bin could contain non-integars
       rank_bin_pre[grp_loc[[i]],grp_loc[[j]]]=rank_bin_tmp
       rank_bin_pre[grp_loc_inner[[i]],grp_loc_inner[[j]]]= 1+((rank_bin_pre[grp_loc_inner[[i]],grp_loc_inner[[j]]]-1)/(l_cor_tmp-n_diag-1) *(l_cor_tmp_ref-1))
       rank_bin_pre[grp_loc_inner[[i]],grp_loc_inner[[j]]][which(rank_bin_pre[grp_loc_inner[[i]],grp_loc_inner[[j]]]>l_cor_tmp_ref)]=l_cor_tmp_ref
@@ -134,26 +134,20 @@ est_cor<-function(rank_bin,cor_ref){
   rank_bin=rank_bin[up_tri]
   rank_bin1=rank_bin %/% 1
   
-  #Assign weights to each rank according to the distance to rank_bin
+  # Assign weights to each rank according to the distance to rank_bin
   rank_bin_w2 = (rank_bin - rank_bin1)
   
   rank_bin2=rank_bin1+1
   rank_bin_w1 = 1-rank_bin_w2
   
-  #Find the correlations in the cor_ref corresponding to the two nearest ranks to rank_bin
-  #Estimate the correlation using weighted average based on the distance to rank_bin
+  # Find the correlations in the cor_ref corresponding to the two nearest ranks to rank_bin
+  # Estimate the correlation using weighted average based on the distance to rank_bin
   rank_bin2[which(rank_bin2>length(cor_ref_sorted))]=length(cor_ref_sorted)
   cor_adj[up_tri] =  rank_bin_w1*cor_ref_sorted[rank_bin1]+ rank_bin_w2*cor_ref_sorted[rank_bin2]#1.3min for all genes
   
-  remove(rank_bin1)
-  remove(rank_bin2)
-  remove(rank_bin_w1)
-  remove(rank_bin_w2)
-  remove(up_tri)
-  remove(rank_bin)
+  remove(rank_bin1);remove(rank_bin2);remove(rank_bin_w1);remove(rank_bin_w2);remove(up_tri);remove(rank_bin)
   
-  low_tri=lower.tri(cor_adj)
-  cor_adj[low_tri]=t(cor_adj)[low_tri]
+  cor_adj[lower.tri(cor_adj)]=t(cor_adj)[lower.tri(cor_adj)]
   diag(cor_adj)=1
   cor_adj
 }
