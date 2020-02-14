@@ -1,17 +1,3 @@
-cpm<-function(counts){
-  counts_cpm=t( (t(counts)/colSums(counts)) * (1e+6)   )
-  counts_cpm
-}
-
-
-rpm_filt_v2 <- function(counts_raw){
-  counts_log2cpm=log2(cpm(counts_raw)+0.5)
-  keep=which(rowMedians(data.matrix(counts_log2cpm))>0)
-  counts_log2cpm_keep=counts_log2cpm[keep,]
-  counts_raw_keep=counts_raw[keep,]
-  return(list(counts_raw_keep=counts_raw_keep,counts_log2cpm_keep=counts_log2cpm_keep,keep=keep))
-}
-
 removePCs <- function(counts_logrpm, num_PCs = 4){
   if(num_PCs > 0) {
     counts_removePCs= t(removePrincipalComponents( scale(t(counts_logrpm)), num_PCs))
