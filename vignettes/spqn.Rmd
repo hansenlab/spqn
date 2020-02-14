@@ -119,8 +119,8 @@ for(j in 1:10){
     qqplot_density2(cor_m_spqn, j, j)
 }
 ```
+
 Find the relationship between the lowest of the two expression bins and IQR 
-min-IQR relationship
 ```{r, message = FALSE, fig.width = 4, fig.height = 4}
 IQR_unlist <- unlist(lapply(1:10, function(ii) IQR_spqnlist$IQR_cor_mat[ii, ii:10]))
 plot(rep(IQR_spqn_list$grp_mean, times = 1:10),
