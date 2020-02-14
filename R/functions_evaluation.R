@@ -8,24 +8,19 @@ get_grp_loc <- function(cor_matrix, ngrp=10){
 cal_m_sd_IQR <- function(cor_matrix, ave_logcpm){
     grp_loc <- get_grp_loc(cor_matrix)
   
-    sd_cor_mat <- IQR_cor_mat= array(dim=c(10,10))
+    IQR_cor_mat= array(dim=c(10,10))
     grp_mean <- c()
     for(i in 1:10) {
-        for(j in 1:10) {
+        cor_tmp <- cor_matrix[grp_loc[[i]],grp_loc[[i]]]
+        IQR_cor_mat[i,i] <- IQR(cor_tmp[upper.tri(cor_tmp)]) 
+        for(j in (i+1):10) {
             cor_tmp <- cor_matrix[grp_loc[[i]],grp_loc[[j]]]
-            if(i==j) {
-                sd_cor_mat[i,j] <- sd(cor_tmp[upper.tri(cor_tmp)]) #remove diagnal elements
-                IQR_cor_mat[i,j] <- IQR(cor_tmp[upper.tri(cor_tmp)]) #remove diagnal elements
-            }
-            if(i!=j){
-                sd_cor_mat[i,j] <- sd(cor_tmp)
                 IQR_cor_mat[i,j] <- IQR(cor_tmp)
-            }
         }
         grp_mean <- c(grp_mean, mean(ave_logcpm[grp_loc[[i]]]))
     }
-    return(list(sd_cor_mat=sd_cor_mat,
-                IQR_cor_mat=IQR_cor_mat,
+    IQR_cor_mat[lower.tri(IQR_cor_mat)]= t(IQR_cor_mat)[lower.tri(IQR_cor_mat)]
+    return(list(IQR_cor_mat=IQR_cor_mat,
                 grp_mean=grp_mean))
 }
 
