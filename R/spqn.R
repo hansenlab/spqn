@@ -34,7 +34,6 @@ create_bins <- function(n_genes, n_bins = 20, size_bins = 400) {
         outer_bins[[i]] <- c(grp_loc0[[i]][1]:(grp_loc0[[i]][1] + size_bins - 1))
     }
     outer_bins[[n_bins]] <- c((n_genes-size_bins+1):n_genes)
-    ## outer bins done
     
     inner_bins <- list()
     size_bins <- length(outer_bins[[1]])
@@ -150,7 +149,7 @@ est_cor<-function(rank_bin,cor_ref){
   rank_bin1=rank_bin %/% 1
   
   #Assign weights to each rank according to the distance to rank_bin
-  rank_bin_w2 = (rank_bin - rank_bin1)#15s for all genes
+  rank_bin_w2 = (rank_bin - rank_bin1)
   
   rank_bin2=rank_bin1+1
   rank_bin_w1 = 1-rank_bin_w2
