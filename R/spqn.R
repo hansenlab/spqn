@@ -128,7 +128,7 @@ est_cor<-function(rank_bin,cor_ref){
   cor_adj=array(dim=dim(rank_bin))
   cor_ref_sorted=sort(cor_ref[upper.tri(cor_ref)])
   
-  up_tri=upper.tri(cor_adj)#15s for all genes
+  up_tri=upper.tri(cor_adj)
   
   #Find to nearest integars to rank_bin, since rank_bin could contain non-integars
   rank_bin=rank_bin[up_tri]
@@ -147,7 +147,8 @@ est_cor<-function(rank_bin,cor_ref){
   
   remove(rank_bin1);remove(rank_bin2);remove(rank_bin_w1);remove(rank_bin_w2);remove(up_tri);remove(rank_bin)
   
-  cor_adj[lower.tri(cor_adj)]=t(cor_adj)[lower.tri(cor_adj)]
+  low_tri=upper.tri(cor_adj)
+  cor_adj[low_tri]=t(cor_adj)[low_tri]
   diag(cor_adj)=1
   cor_adj
 }
