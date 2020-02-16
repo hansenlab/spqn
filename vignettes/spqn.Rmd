@@ -58,14 +58,10 @@ plot_signal_condition_exp(cor_m, 0.1)
 We now compute IQRs across the correlation matrix and plot them
 
 
-Calculate IQR of correlations for each expression level
+Calculate IQR of correlations for each expression level, and compare the IQR of correlations between genes in each expression level
+
 ```{r, message=FALSE}
 IQR_list <- get_IQR_condition_exp(cor_m, rowData(gtex.4k)$ave_logrpkm)
-
-```
-
-Compare the IQR of correlations between genes in each expression level
-```{r, message=FALSE, fig.width=4, fig.height=4}
 boxplot(IQR_list$IQR_cor_mat)
 ```
 
@@ -101,14 +97,10 @@ Compare the distribution of correlations in signals and background, stratified b
 plot_signal_condition_exp(cor_m_spqn, 0.1)
 ```
 
-Calculate IQR of correlations for each expression level
+Calculate IQR of correlations for each expression level, and compare the IQR of correlations between genes in each expression level
+
 ```{r, message=FALSE}
 IQR_spqn_list <- get_IQR_condition_exp(cor_m_spqn, rowData(gtex.4k)$ave_logrpkm)
-
-```
-
-Compare the IQR of correlations between genes in each expression level
-```{r, message=FALSE, fig.width=4, fig.height=4}
 boxplot(IQR_spqn_list$IQR_cor_mat)
 ```
 
