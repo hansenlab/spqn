@@ -47,7 +47,7 @@ We now recreate a number of diagnostic plots which illustrate the mean-correlati
 
 First compare the distribution of correlations in each expression level
 ```{r, message = F, fig.width = 4, fig.height = 4}
-plot_diagonal_ridge4(cor_m)
+plot_diagonal_ridge(cor_m)
 ```
 
 Compare the distribution of correlations in signals and background, stratified by expression level
@@ -60,7 +60,7 @@ We now compute IQRs across the correlation matrix and plot them
 
 Calculate IQR of correlations for each expression level
 ```{r, message=FALSE}
-IQR_list <- cal_m_sd_IQR(cor_m, rowData(gtex.4k)$ave_logrpkm)
+IQR_list <- get_IQR(cor_m, rowData(gtex.4k)$ave_logrpkm)
 
 ```
 
@@ -73,7 +73,7 @@ boxplot(IQR_list$IQR_cor_mat)
 Compare the distribution of each bin and the reference bin, using qqplot
 ```{r, message = FALSE, fig.width = 3, fig.height = 3}
 for(j in 1:10){
-    qqplot_density2(cor_m, j, j)
+    qqplot_density(cor_m, j, j)
 }
 ```
 
@@ -93,7 +93,7 @@ cor_m_spqn <- quantile_norm(cor_m, ngrp=20, size_grp=300, ref_grp=18)
 # Check the mean-correlation dependency after applying SPQN.
 Compare the distribution of correlations in each expression level
 ```{r, message = F, fig.width = 4, fig.height = 4}
-plot_diagonal_ridge4(cor_m_spqn)
+plot_diagonal_ridge(cor_m_spqn)
 ```
 
 Compare the distribution of correlations in signals and background, stratified by expression level
@@ -103,7 +103,7 @@ plot_signal_condition_exp(cor_m_spqn, 0.1)
 
 Calculate IQR of correlations for each expression level
 ```{r, message=FALSE}
-IQR_spqn_list <- cal_m_sd_IQR(cor_m_spqn, rowData(gtex.4k)$ave_logrpkm)
+IQR_spqn_list <- get_IQR(cor_m_spqn, rowData(gtex.4k)$ave_logrpkm)
 
 ```
 
@@ -116,7 +116,7 @@ boxplot(IQR_spqn_list$IQR_cor_mat)
 Compare the distribution of each bin and the reference bin, using qqplot
 ```{r, message = FALSE, fig.width = 3, fig.height = 3}
 for(j in 1:10){
-    qqplot_density2(cor_m_spqn, j, j)
+    qqplot_density(cor_m_spqn, j, j)
 }
 ```
 
