@@ -5,7 +5,7 @@ get_grp_loc <- function(cor_matrix, ngrp=10){
     return(grp_loc)
 }
 
-cal_m_sd_IQR <- function(cor_matrix, ave_logcpm){
+get_IQR <- function(cor_matrix, ave_logcpm){
     grp_loc <- get_grp_loc(cor_matrix)
   
     IQR_cor_mat= array(dim=c(10,10))
@@ -79,7 +79,7 @@ cal_m_sd_IQR <- function(cor_matrix, ave_logcpm){
 ##   # theme(axis.title.x = element_text(size=20),axis.title.y = element_text(size=10),axis.text=element_text(size=20))
 ## }
 
-qqplot_density2 <- function(cor_matrix, i, j){
+qqplot_density <- function(cor_matrix, i, j){
     group_loc <- get_grp_loc(cor_matrix)
   
     cor_ref <- cor_matrix[group_loc[[9]], group_loc[[9]]]
@@ -97,7 +97,7 @@ qqplot_density2 <- function(cor_matrix, i, j){
     abline(0, 1, col="blue")
 }
 
-plot_diagonal_ridge4 <- function(cor_matrix, ngrp=10){
+plot_diagonal_ridge <- function(cor_matrix, ngrp=10){
     ngene <- ncol(cor_matrix)
     grp_label <- cut(1:ngene, ngrp)
     grp_loc <- split(1:ngene, grp_label) 
