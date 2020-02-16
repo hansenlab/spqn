@@ -19,7 +19,7 @@ normalize_correlation(cor_mat, ngrp, size_grp, ref_grp)
 The normalized correlation matrix
 }
 \description{
-Spatial Quantile Normalization
+The normalize_correlation function allows users to normalize the correlation matrix, such that the local distributions of the correlations are approximately the same.
 }
 \examples{
 a=rnorm(10000)
