@@ -41,7 +41,7 @@ gtex.4k <- gtex.4k[order(rowData(gtex.4k)$ave_logrpkm),]
 cor_m <- cor(t(assay(gtex.4k)))
 ```
 
-# Mean-correlation relationship
+# Check mean-correlation relationship in the data
 
 We now recreate a number of diagnostic plots which illustrate the mean-correlation relationship
 
