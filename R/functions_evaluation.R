@@ -12,10 +12,12 @@ get_IQR_condition_exp <- function(cor_matrix, ave_logcpm){
     grp_mean <- c()
     for(i in 1:10) {
         cor_tmp <- cor_matrix[grp_loc[[i]],grp_loc[[i]]]
-        IQR_cor_mat[i,i] <- IQR(cor_tmp[upper.tri(cor_tmp)]) 
-        for(j in (i+1):10) {
-            cor_tmp <- cor_matrix[grp_loc[[i]],grp_loc[[j]]]
+        IQR_cor_mat[i,i] <- IQR(cor_tmp[upper.tri(cor_tmp)])
+        if(i < 10){ 
+            for(j in (i+1):10) {
+                cor_tmp <- cor_matrix[grp_loc[[i]],grp_loc[[j]]]
                 IQR_cor_mat[i,j] <- IQR(cor_tmp)
+            }
         }
         grp_mean <- c(grp_mean, mean(ave_logcpm[grp_loc[[i]]]))
     }
@@ -73,7 +75,7 @@ plot_signal_condition_exp <- function(cor_mat, percent_sig) {
     nsignal <- ncor*percent_sig/100
     nsignal_grp <- nsignal/100
   
-    list_cor_sig <- list_cor_back=grp_back <- grp_sig=c()
+    list_cor_sig <- list_cor_back <- grp_back <- grp_sig <- c()
     grp_locs <- get_grp_loc(cor_mat)
   
     for(ngrp in 1:10) {
