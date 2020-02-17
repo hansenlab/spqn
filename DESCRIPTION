@@ -1,7 +1,7 @@
 Package: spqn
 Version: 0.0.1
 Title: Spatial quantile normalization
-Description: Spatial quantile normalization for co-expression analysis.
+Description: The spqn package contains the function to normalize the local distribution in a matrix. Specifically, the spqn package contains the function to approximate the local distribution and trasformed them to the target distribution. spqn approximated the local distribution by binnning the matrix into disjoint bins, and using empirical distribution of larger bins to approximate the distribution of disjoint bins. The quantile normalization was used to map the disjoint bins to target bin. After normalization, the local distribution are approximately the same.
 Authors@R: c(person("Yi", "Wang", role = c("cre", "aut"), email = "mdabrow1@jhu.edu"),
 	     person(c("Kasper", "Daniel"), "Hansen", role = "aut"))
 Depends: ggplot2,
