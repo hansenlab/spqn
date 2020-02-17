@@ -24,7 +24,7 @@
 
 ##### Asssign inner bins
 ## In each running group, get a inner group
-get_grps_inner <- function(grp_loc){
+.get_grps_inner <- function(grp_loc){
     grp_loc_inner <- list()
     ngrp <- length(grp_loc)
     size_bin <- length(grp_loc[[1]])
@@ -45,8 +45,8 @@ get_grps_inner <- function(grp_loc){
 
 
 ##### Get rank for each running bin
-.get_bin_rank<-function(cor_obs,grp_loc,grp_loc_inner,cor_ref){
-    rank_bin <- rank_bin_pre=array(dim=dim(cor_obs))
+.get_bin_rank <- function(cor_obs,grp_loc,grp_loc_inner,cor_ref){
+    rank_bin <- rank_bin_pre <- array(dim=dim(cor_obs))
     ngrp <- length(grp_loc)
     size_bin <- length(grp_loc[[1]])
     
@@ -77,7 +77,7 @@ get_grps_inner <- function(grp_loc){
 }
 
 ##### Transform rank to cor_est
-.est_cor<-function(rank_bin,cor_ref){
+.est_cor<-function(rank_bin, cor_ref){
     cor_adj <- array(dim=dim(rank_bin))
     cor_ref_sorted <- sort(cor_ref[upper.tri(cor_ref)])
     
@@ -112,7 +112,7 @@ get_grps_inner <- function(grp_loc){
 }
 
 
-.normalize_correlation <- function(cor_mat, ngrp, size_grp, ref_grp){
+normalize_correlation <- function(cor_mat, ngrp, size_grp, ref_grp){
     group_loc <- .get_grps(cor_mat, ngrp, size_grp)
     
     ## Asssign inner bins
