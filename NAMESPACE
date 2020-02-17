@@ -6,8 +6,7 @@ importFrom("utils", "tail")
 importFrom("matrixStats", "rowMedians")
 importFrom("WGCNA", "removePrincipalComponents")
 
-export("plot_diagonal_ridge4",
-       "plot_signal_condition_exp",
-       "cal_m_sd_IQR",
-       "qqplot_density2",
+export("plot_density_condition_exp",
+       "get_IQR_condition_exp",
+       "qqplot_condition_exp",
        "quantile_norm")
