@@ -13,7 +13,7 @@ normalize_correlation(cor_mat, ngrp, size_grp, ref_grp)
 
 \item{size_grp}{Integer, size of rolling bin, i.e. the number of genes in each edge of the bin.}
 
-\item{ref_grp}{Integer, the location of reference bin that represents target distribution. SpQN uses the reference bin to map the correlations in each disjoint bins to the corresponding percentile in the target distribution.}
+\item{ref_grp}{Integer, the location of reference bin that represents target distribution. SpQN uses the reference bin to map the correlations in each disjoint bin to the corresponding percentile in the target distribution.}
 }
 \value{
 The normalized correlation matrix, where the local distribution of correlations are approximately the same across the correlation matrix.
