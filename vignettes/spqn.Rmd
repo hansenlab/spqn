@@ -17,8 +17,10 @@ output:
     toc_float: true
 ---
 
+This is a vignettes for examining and visualizing the mean-correlation dependency in a correlation matrix, applying spatial quantile normalization (SpQN) to remove such dependency,as well as examining the normalized the correlation matrix.
 
-The estimation of pairwise correlations in the gene expression data is commonly used in the co-expression analysis such as network reconstruction of regulatory pathways. Our study reveals a dependency between the Pearson correlation and gene expression levels in bulk RNA-seq data, that highly expressed genes have highly variant correlations, which we refer to as mean-corelation relationship. Such dependency introduces bias in the downstream analysis that the co-expression signals among lowly expressed genes are likely to be ignored, such as transcription factors. To address this problem, we develop a method called spatial quantile normalization (SpQN), to normalize the the correlation matrix of gene expression data. We show that SpQN removes the mean-correlation relationship and corrects the expression bias in co-expression analysis.
+
+Such dependency introduces bias in the downstream analysis that the co-expression signals among lowly expressed genes are likely to be ignored, such as transcription factors. To address this problem, we develop a method called spatial quantile normalization (SpQN), to normalize the the correlation matrix of gene expression data. We show that SpQN removes the mean-correlation relationship and corrects the expression bias in co-expression analysis.
 
 
 # Preliminaries
