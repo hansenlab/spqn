@@ -58,13 +58,13 @@ Next, to examine the downstream effect of the mean-correlation relationship, com
 plot_signal_condition_exp(cor_m, 0.1)
 ```
 
-We then compare the IQR of correlations between genes in each expression level, by gridding the correlation matrix into 10 by 10 bins, and compute the interquartile ranges (IQRs) for each bin, and plot them (the width of each box).
+Then compare the IQR of correlations between genes in each expression level, by gridding the correlation matrix into 10 by 10 bins, and compute the interquartile ranges (IQRs) for each bin, and plot them (the width of each box).
 ```{r, message=FALSE}
 IQR_list <- get_IQR_condition_exp(cor_m, rowData(gtex.4k)$ave_logrpkm)
 boxplot(IQR_list$IQR_cor_mat)
 ```
 
-Find the marginal relationship between the lowest of the two expression bins and IQR 
+Furtherly, find the marginal relationship between the lowest of the two expression bins and IQR 
 ```{r, message = FALSE, fig.width = 4, fig.height = 4}
 IQR_unlist <- unlist(lapply(1:10, function(ii) IQR_list$IQR_cor_mat[ii, ii:10]))
 plot(rep(IQR_list$grp_mean, times = 1:10),
@@ -81,12 +81,14 @@ for(j in 1:10){
 
 
 
-# To correct the mean-correlation dependency, apply SPQN in the correlation matrix, such that correlations of genes follows approximately the same distribution across different expression levels.
+# To correct the mean-correlation dependency, apply SPQN in the correlation matrix
 ```{r spqn, message = FALSE, fig.width = 4, fig.height = 4}
 cor_m_spqn <- normalize_correlation(cor_m, ngrp=20, size_grp=300, ref_grp=18)
 ```
 
-# Check the mean-correlation dependency after applying SPQN.
+# Check the normalization performance, i.e. whether the correlations of genes with different expression levels follow approximately the same distribution.
+
+
 Compare the distribution of correlations in each expression level
 ```{r, message = F, fig.width = 4, fig.height = 4}
 plot_density_condition_exp(cor_m_spqn)
