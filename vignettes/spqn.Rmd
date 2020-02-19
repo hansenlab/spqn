@@ -20,9 +20,6 @@ output:
 This is a vignettes for examining and visualizing the mean-correlation dependency in a correlation matrix, applying spatial quantile normalization (SpQN) to remove such dependency,as well as examining the normalized the correlation matrix.
 
 
-Such dependency introduces bias in the downstream analysis that the co-expression signals among lowly expressed genes are likely to be ignored, such as transcription factors. To address this problem, we develop a method called spatial quantile normalization (SpQN), to normalize the the correlation matrix of gene expression data. We show that SpQN removes the mean-correlation relationship and corrects the expression bias in co-expression analysis.
-
-
 # Preliminaries
 
 
@@ -47,16 +44,16 @@ gtex.4k <- gtex.4k[order(rowData(gtex.4k)$ave_logrpkm),]
 cor_m <- cor(t(assay(gtex.4k)))
 ```
 
-# Check mean-correlation relationship in the data
+# Examine the mean-correlation relationship in the data
 
 We now recreate a number of diagnostic plots which illustrate the mean-correlation relationship
 
-First compare the distribution of correlations in each expression level
+First, to visualize the mean-correlation relationship, compare the distribution of correlations in each expression level
 ```{r, message = F, fig.width = 4, fig.height = 4}
 plot_density_condition_exp(cor_m)
 ```
 
-Compare the distribution of correlations in signals and background, stratified by expression level
+Next, to examine the downstream effect of the mean-correlation relationship, compare the distribution of correlations in signals and background, stratified by expression level
 ```{r, message = F, fig.width = 4, fig.height = 4}
 plot_signal_condition_exp(cor_m, 0.1)
 ```
