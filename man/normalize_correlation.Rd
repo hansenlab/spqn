@@ -16,10 +16,10 @@ normalize_correlation(cor_mat, ngrp, size_grp, ref_grp)
 \item{ref_grp}{Integer, the location of reference bin that represents target distribution. SpQN uses the reference bin to map the correlations in each disjoint bins to the corresponding percentile in the target distribution.}
 }
 \value{
-The normalized correlation matrix, where the distribution of correlations are approximately independent of gene expression levels.
+The normalized correlation matrix, where the local distribution of correlations are approximately the same across the correlation matrix.
 }
 \description{
-The normalize_correlation function allows users to normalize the correlation matrix, such that the local distributions of the correlations are approximately the same.
+The normalize_correlation function allows users to normalize the correlation matrix, such that the distributions of correlations are approximately independent of gene expression levels.
 }
 \examples{
 a=rnorm(10000)
