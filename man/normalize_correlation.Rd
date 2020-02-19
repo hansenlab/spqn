@@ -19,7 +19,7 @@ normalize_correlation(cor_mat, ngrp, size_grp, ref_grp)
 The normalized correlation matrix, where the local distribution of correlations are approximately the same across the correlation matrix.
 }
 \description{
-The normalize_correlation function allows users to normalize the correlation matrix, such that the distributions of correlations are approximately independent of gene expression levels.
+The normalize_correlation function allows users to normalize the correlation matrix, such that the distributions of correlations are not dependent of gene expression levels.
 }
 \examples{
 a=rnorm(10000)
