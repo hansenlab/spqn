@@ -50,7 +50,7 @@ We now recreate a number of diagnostic plots which illustrate the mean-correlati
 
 First, to visualize the mean-correlation relationship, group the genes by expression level and compare the distribution of correlations in each group.
 ```{r, message = F, fig.width = 4, fig.height = 4}
-plot_density_condition_exp(cor_m)
+plot_signal_condition_exp(cor_m, 0)
 ```
 
 Next, to examine the downstream effect of the mean-correlation relationship, compare the separation of signal and background conditional on different expression levels, i.e. compare the distribution of correlations between signals and background in each group. Here we define signal as 0.1% highest absolute correlations in each group.  
@@ -91,7 +91,7 @@ cor_m_spqn <- normalize_correlation(cor_m, ngrp=20, size_grp=300, ref_grp=18)
 
 Compare the distribution of correlations in each expression level
 ```{r, message = F, fig.width = 4, fig.height = 4}
-plot_density_condition_exp(cor_m_spqn)
+plot_signal_condition_exp(cor_m_spqn, 0)
 ```
 
 Compare the separation of signal and background conditional on different expression levels
