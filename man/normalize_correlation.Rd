@@ -26,5 +26,4 @@ a=rnorm(10000)
 b=a/max(abs(a))
 cor_ori=array(b,dim=c(100,100))
 normalize_correlation(cor_ori,ngrp=10,size_grp=15,ref_grp=9)
-
 }
