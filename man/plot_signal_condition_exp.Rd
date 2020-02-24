@@ -1,4 +1,4 @@
-	\name{plot_signal_condition_exp}
+\name{plot_signal_condition_exp}
 \alias{plot_signal_condition_exp}
 \title{Plot the signal and background distribution}
 \usage{plot_signal_condition_exp(cor_mat, percent_sig) }
