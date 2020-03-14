@@ -27,13 +27,13 @@ get_IQR_condition_exp <- function(cor_mat, ave_logrpkm){
 }
 
 
-qqplot_condition_exp <- function(cor_matrix, i, j){
-    group_loc <- get_grp_loc(cor_matrix)
+qqplot_condition_exp <- function(cor_mat, i, j){
+    group_loc <- get_grp_loc(cor_mat)
   
-    cor_ref <- cor_matrix[group_loc[[9]], group_loc[[9]]]
+    cor_ref <- cor_mat[group_loc[[9]], group_loc[[9]]]
     cor_ref_vec <- cor_ref[upper.tri(cor_ref)]
   
-    cor_tmp <- cor_matrix[group_loc[[i]], group_loc[[j]]]
+    cor_tmp <- cor_mat[group_loc[[i]], group_loc[[j]]]
     if(i==j) {
         cor_tmp <- cor_tmp[upper.tri(cor_tmp)]
     }
