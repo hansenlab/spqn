@@ -11,5 +11,6 @@
 \examples{
 a=rnorm(100)
 IQR_cor_mat=array(a,dim=c(10,10))
-boxplot(IQR_cor_mat)
+grp_mean=c(1:10)
+boxplot(IQR_cor_mat,grp_mean)
 }
