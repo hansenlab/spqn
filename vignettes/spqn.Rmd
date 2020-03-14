@@ -42,6 +42,7 @@ First we sort the genes according to expression level and then calculate the cor
 ```{r cor_m, message=FALSE}
 gtex.4k <- gtex.4k[order(rowData(gtex.4k)$ave_logrpkm),]
 cor_m <- cor(t(assay(gtex.4k)))
+ave_logrpkm <- rowData(gtex.4k)$ave_logrpkm
 ```
 
 # Examine the mean-correlation relationship in the data
@@ -50,18 +51,18 @@ We now recreate a number of diagnostic plots which illustrate the mean-correlati
 
 First, to visualize the mean-correlation relationship, group the genes by expression level and compare the distribution of correlations in each group.
 ```{r, message = F, fig.width = 4, fig.height = 4}
-plot_signal_condition_exp(cor_m, 0)
+plot_signal_condition_exp(cor_m, ave_logrpkm, 0)
 ```
 
 Next, to examine the downstream effect of the mean-correlation relationship, compare the separation of signal and background conditional on different expression levels, i.e. compare the distribution of correlations between signals and background in each group. Here we define signal as 0.1% highest absolute correlations in each group.  
 ```{r, message = F, fig.width = 4, fig.height = 4}
-plot_signal_condition_exp(cor_m, 0.1)
+plot_signal_condition_exp(cor_m, ave_logrpkm, 0.1)
 ```
 
 Then compare the IQR of correlations for genes in each expression level, by gridding the correlation matrix into 10 by 10 bins, and compute the interquartile ranges (IQRs) for each bin, and plot them (the width of each box).
 ```{r, message=FALSE}
 IQR_list <- get_IQR_condition_exp(cor_m, rowData(gtex.4k)$ave_logrpkm)
-boxplot(IQR_list$IQR_cor_mat, IQR_list$grp_mean)
+boxplot(IQR_list)
 ```
 
 Furtherly, find the marginal relationship between the lowest of the two expression bins and IQR 
@@ -69,13 +70,13 @@ Furtherly, find the marginal relationship between the lowest of the two expressi
 IQR_unlist <- unlist(lapply(1:10, function(ii) IQR_list$IQR_cor_mat[ii, ii:10]))
 plot(rep(IQR_list$grp_mean, times = 1:10),
      IQR_unlist,
-     xlab="min(average(log2CPM))", ylab="IQR", cex.lab=1.5, cex.axis=1.2, col="blue")
+     xlab="min(average(log2RPKM))", ylab="IQR", cex.lab=1.5, cex.axis=1.2, col="blue")
 ```
 
 Next, compare the distribution between each bin and the reference bin(here we use the (9,9) bin) by qqplot 
 ```{r, message = FALSE, fig.width = 3, fig.height = 3}
 for(j in 1:10){
-    qqplot_condition_exp(cor_m, j, j)
+    qqplot_condition_exp(cor_m, ave_logrpkm, j, j)
 }
 ```
 
@@ -83,7 +84,7 @@ for(j in 1:10){
 
 # To correct the mean-correlation dependency, apply SPQN in the correlation matrix
 ```{r spqn, message = FALSE, fig.width = 4, fig.height = 4}
-cor_m_spqn <- normalize_correlation(cor_m, ngrp=20, size_grp=300, ref_grp=18)
+cor_m_spqn <- normalize_correlation(cor_m, ave_logrpkm, ngrp=20, size_grp=300, ref_grp=18)
 ```
 
 # Check the normalization performance, i.e. whether the correlations of genes with different expression levels follow approximately the same distribution.
@@ -91,34 +92,34 @@ cor_m_spqn <- normalize_correlation(cor_m, ngrp=20, size_grp=300, ref_grp=18)
 
 Compare the distribution of correlations in each expression level
 ```{r, message = F, fig.width = 4, fig.height = 4}
-plot_signal_condition_exp(cor_m_spqn, 0)
+plot_signal_condition_exp(cor_m_spqn, ave_logrpkm, 0)
 ```
 
 Compare the separation of signal and background conditional on different expression levels
 ```{r, message = F, fig.width = 4, fig.height = 4}
-plot_signal_condition_exp(cor_m_spqn, 0.1)
+plot_signal_condition_exp(cor_m_spqn, ave_logrpkm, 0.1)
 ```
 
 Compare the IQR of correlations for genes in each expression level
 ```{r, message=FALSE}
 IQR_spqn_list <- get_IQR_condition_exp(cor_m_spqn, rowData(gtex.4k)$ave_logrpkm)
-boxplot(IQR_spqn_list$IQR_cor_mat,IQR_spqn_list$grp_mean)
+boxplot(IQR_spqn_list)
 ```
 
 
 Compare the distribution of each bin and the reference bin, using qqplot
 ```{r, message = FALSE, fig.width = 3, fig.height = 3}
 for(j in 1:10){
-    qqplot_condition_exp(cor_m_spqn, j, j)
+    qqplot_condition_exp(cor_m_spqn, ave_logrpkm, j, j)
 }
 ```
 
 Find the marginal relationship between the lowest of the two expression bins and IQR 
 ```{r, message = FALSE, fig.width = 4, fig.height = 4}
-IQR_unlist <- unlist(lapply(1:10, function(ii) IQR_spqnlist$IQR_cor_mat[ii, ii:10]))
+IQR_unlist <- unlist(lapply(1:10, function(ii) IQR_spqn_list$IQR_cor_mat[ii, ii:10]))
 plot(rep(IQR_spqn_list$grp_mean, times = 1:10),
      IQR_unlist,
-     xlab="min(average(log2CPM))", ylab="IQR", cex.lab=1.5, cex.axis=1.2, col="blue")
+     xlab="min(average(log2RPKM))", ylab="IQR", cex.lab=1.5, cex.axis=1.2, col="blue")
 ```
 
 
