@@ -12,6 +12,6 @@
 a=rnorm(10000)
 b=a/max(abs(a))
 cor_ori=array(b,dim=c(100,100))
-IQR_list=get_IQR_condition_exp(cor_m, c(1:100))
+IQR_list=get_IQR_condition_exp(cor_ori, c(1:100))
 boxplot(IQR_list$IQR_cor_mat)
 }
