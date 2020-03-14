@@ -9,9 +9,7 @@
 \description{This function allows users to compare the IQR of correlations conditional on expression matrix.
 }
 \examples{
-a=rnorm(10000)
-b=a/max(abs(a))
-cor_ori=array(b,dim=c(100,100))
-IQR_list=get_IQR_condition_exp(cor_ori, c(1:100))
-boxplot(IQR_list$IQR_cor_mat)
+a=rnorm(100)
+IQR_cor_mat=array(a,dim=c(10,10))
+boxplot(IQR_cor_mat)
 }
