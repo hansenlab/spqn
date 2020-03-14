@@ -12,6 +12,7 @@
 \examples{
 a=rnorm(10000)
 b=a/max(abs(a))
-cor_ori=array(b,dim=c(100,100))
-get_IQR_condition_exp(cor_ori,c(1:100))
+cor_mat=array(b,dim=c(100,100))
+ave_logrpkm=c(1:100)
+get_IQR_condition_exp(cor_mat,ave_logrpkm)
 }
