@@ -9,6 +9,9 @@ plot_signal_condition_exp(cor_mat, percent_sig)
 
 \item{percent_sig}{Numeric, percentage of signals in each group of the correlation matrix} 
 }
+
+\item{ave_logrpkm}{Vector, average expression level of each gene}
+
 \value{A ridge plot visualizing the distribution of background and signals in each group of correlation matrix}
 \description{
 This function allows users to visualize the separation between signals and background, conditional on expression levels.
@@ -17,5 +20,6 @@ This function allows users to visualize the separation between signals and backg
 a=rnorm(10000)
 b=a/max(abs(a))
 cor_ori=array(b,dim=c(100,100))
-plot_signal_condition_exp(cor_ori,0.1)
+ave_logrpkm=1:100
+plot_signal_condition_exp(cor_ori,ave_logrpkm,0.1)
 }
