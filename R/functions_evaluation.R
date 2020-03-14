@@ -5,21 +5,21 @@ get_grp_loc <- function(cor_matrix, ngrp=10){
     return(grp_loc)
 }
 
-get_IQR_condition_exp <- function(cor_matrix, ave_logcpm){
-    grp_loc <- get_grp_loc(cor_matrix)
+get_IQR_condition_exp <- function(cor_mat, ave_logrpkm){
+    grp_loc <- get_grp_loc(cor_mat)
   
     IQR_cor_mat= array(dim=c(10,10))
     grp_mean <- c()
     for(i in 1:10) {
-        cor_tmp <- cor_matrix[grp_loc[[i]],grp_loc[[i]]]
+        cor_tmp <- cor_mat[grp_loc[[i]],grp_loc[[i]]]
         IQR_cor_mat[i,i] <- IQR(cor_tmp[upper.tri(cor_tmp)])
         if(i < 10){ 
             for(j in (i+1):10) {
-                cor_tmp <- cor_matrix[grp_loc[[i]],grp_loc[[j]]]
+                cor_tmp <- cor_mat[grp_loc[[i]],grp_loc[[j]]]
                 IQR_cor_mat[i,j] <- IQR(cor_tmp)
             }
         }
-        grp_mean <- c(grp_mean, mean(ave_logcpm[grp_loc[[i]]]))
+        grp_mean <- c(grp_mean, mean(ave_logrpkm[grp_loc[[i]]]))
     }
     IQR_cor_mat[lower.tri(IQR_cor_mat)]= t(IQR_cor_mat)[lower.tri(IQR_cor_mat)]
     return(list(IQR_cor_mat=IQR_cor_mat,
