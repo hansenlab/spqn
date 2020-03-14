@@ -6,6 +6,9 @@ get_grp_loc <- function(cor_matrix, ngrp=10){
 }
 
 get_IQR_condition_exp <- function(cor_mat, ave_logrpkm){
+  
+    cor_mat=cor_mat[order(ave_logrpkm),order(ave_logrpkm)]
+  
     grp_loc <- get_grp_loc(cor_mat)
   
     IQR_cor_mat= array(dim=c(10,10))
@@ -27,7 +30,10 @@ get_IQR_condition_exp <- function(cor_mat, ave_logrpkm){
 }
 
 
-qqplot_condition_exp <- function(cor_mat, i, j){
+qqplot_condition_exp <- function(cor_mat, ave_logrpkm, i, j){
+  
+    cor_mat=cor_mat[order(ave_logrpkm),order(ave_logrpkm)]
+  
     group_loc <- get_grp_loc(cor_mat)
   
     cor_ref <- cor_mat[group_loc[[9]], group_loc[[9]]]
@@ -45,32 +51,10 @@ qqplot_condition_exp <- function(cor_mat, i, j){
     abline(0, 1, col="blue")
 }
 
-plot_density_condition_exp <- function(cor_matrix, ngrp=10){
-    ngene <- ncol(cor_matrix)
-    grp_label <- cut(1:ngene, ngrp)
-    grp_loc <- split(1:ngene, grp_label) 
-    for(i in 1:10) {
-        cor_tmp <- cor_matrix[grp_loc[[i]], grp_loc[[i]]]
-        cor_tmp <- cor_tmp[upper.tri(cor_tmp)]
-        if(i==1) {
-            cor_vec_all <- cbind(as.numeric(cor_tmp), rep(i,length(as.numeric(cor_tmp))))
-            names(cor_vec_all) <- c("correlation","group")
-        } else {
-            cor_vec_all <- rbind(cor_vec_all, cbind(as.numeric(cor_tmp), rep(i,length(as.numeric(cor_tmp)))))
-        }
-    }
-    cor_vec_all <- data.frame(cor_vec_all)
-    names(cor_vec_all) <- c("correlation","group")
-    cor_vec_all$group <- as.factor(cor_vec_all$group)
-  
-    ggplot(cor_vec_all, aes(x = `correlation`, y = `group`)) +
-        geom_density_ridges2(fill="blue") +
-        theme_ridges( grid = TRUE) + theme(axis.title.x = element_blank()) + 
-        geom_vline(xintercept = 0, linetype="dotted", color = "black", size=0.3)
-}
 
-
-plot_signal_condition_exp <- function(cor_mat, percent_sig) { 
+plot_signal_condition_exp <- function(cor_mat, ave_logrpkm, percent_sig) { 
+    cor_mat <- cor_mat[order(ave_logrpkm),order(ave_logrpkm)]
+    
     ncor <- length(which(upper.tri(cor_mat)))
     nsignal <- ncor*percent_sig/100
     nsignal_grp <- nsignal/100
@@ -111,7 +95,10 @@ plot_signal_condition_exp <- function(cor_mat, percent_sig) {
 }
 
 
-boxplot<-function(IQR_cor_mat,grp_mean){
+boxplot<-function(IQR_list){
+  IQR_cor_mat=IQR_list$IQR_cor_mat
+  grp_mean=IQR_list$grp_mean
+  
   IQR_cor_mat2=round(IQR_cor_mat,3)
   IQR_cor_mat=IQR_cor_mat/max(IQR_cor_mat)
   max_sd=max(IQR_cor_mat)
