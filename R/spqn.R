@@ -1,125 +1,136 @@
----
-title: "Spatial quantile normalization for co-expression analysis"
-shorttitle: "spqn guide"
-author:
-  - Yi Wang
-  - Kasper D. Hansen
-  - Stephanie C. Hicks
-package: SpQN
-abstract: >
-  A guide to using spqn for co-expression analysis
-vignette: >
-  %\VignetteIndexEntry{spqn User's Guide}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}  
-output:
-  BiocStyle::html_document:
-    toc_float: true
----
+.get_grps <- function(cor_mat, ngrp=20, size_grp=400){
+    ngene <- nrow(cor_mat)
+    grp_label <- cut(1:(ngene-size_grp+1), ngrp-1)
+    grp_loc0 <- split(1:(ngene-size_grp+1), grp_label)
+    grp_loc <- list()
 
-This is a vignettes for examining and visualizing the mean-correlation dependency in a correlation matrix, applying spatial quantile normalization (SpQN) to remove such dependency,as well as examining the normalized the correlation matrix.
-
-
-# Preliminaries
-
-
-Let's load the package and some example data.
-
-```{r load, message=FALSE}
-library(spqn)
-library(spqnData)
-library(SummarizedExperiment)
-data(gtex.4k)
-```
-
-This dataset contains 4,000 genes from GTEx tissue "Adipose Subcutaneous" which we use as exemplar tissue in our preprint CITE. The data is from GTEx v6p. The genes have been restricted to a random sample of 4,000 genes from genes which are
-- Either protein-coding or linRNAs
-- Expressed (median expression greater than 0 on the $\log_2(\text{RPKM})$ scale
-
-The data is counts (from the GTEx website) which has been transformed to $\log_2(\text{RPKM})$ and 4 principal components have been removed from the data matrix. Removing principal components from the data matrix also results in mean-centering. For this reason we need access to the original log-RPKM values (prior to removing principal components); these are stored in `rowData(gtex.4k)$ave_logrpkm`
-
-First we sort the genes according to expression level and then calculate the correlation matrix
-```{r cor_m, message=FALSE}
-gtex.4k <- gtex.4k[order(rowData(gtex.4k)$ave_logrpkm),]
-cor_m <- cor(t(assay(gtex.4k)))
-ave_logrpkm <- rowData(gtex.4k)$ave_logrpkm
-```
-
-# Examine the mean-correlation relationship in the data
-
-We now recreate a number of diagnostic plots which illustrate the mean-correlation relationship
-
-First, to visualize the mean-correlation relationship, group the genes by expression level and compare the distribution of correlations in each group.
-```{r, message = F, fig.width = 4, fig.height = 4}
-plot_signal_condition_exp(cor_m, ave_logrpkm, 0)
-```
-
-Next, to examine the downstream effect of the mean-correlation relationship, compare the separation of signal and background conditional on different expression levels, i.e. compare the distribution of correlations between signals and background in each group. Here we define signal as 0.1% highest absolute correlations in each group.  
-```{r, message = F, fig.width = 4, fig.height = 4}
-plot_signal_condition_exp(cor_m, ave_logrpkm, 0.1)
-```
-
-Then compare the IQR of correlations for genes in each expression level, by gridding the correlation matrix into 10 by 10 bins, and compute the interquartile ranges (IQRs) for each bin, and plot them (the width of each box).
-```{r, message=FALSE}
-IQR_list <- get_IQR_condition_exp(cor_m, rowData(gtex.4k)$ave_logrpkm)
-boxplot(IQR_list)
-```
-
-Furtherly, find the marginal relationship between the lowest of the two expression bins and IQR 
-```{r, message = FALSE, fig.width = 4, fig.height = 4}
-IQR_unlist <- unlist(lapply(1:10, function(ii) IQR_list$IQR_cor_mat[ii, ii:10]))
-plot(rep(IQR_list$grp_mean, times = 1:10),
-     IQR_unlist,
-     xlab="min(average(log2RPKM))", ylab="IQR", cex.lab=1.5, cex.axis=1.2, col="blue")
-```
-
-Next, compare the distribution between each bin and the reference bin(here we use the (9,9) bin) by qqplot 
-```{r, message = FALSE, fig.width = 3, fig.height = 3}
-for(j in 1:10){
-    qqplot_condition_exp(cor_m, ave_logrpkm, j, j)
+    if(size_grp-length(grp_loc0[[1]])<5){
+        grp_label <- cut(1:ngene, ngrp)
+        grp_loc0 <- split(1:ngene, grp_label)
+        for(i in 1:(ngrp)){
+            grp_loc[[i]] <- grp_loc0[[i]]
+        }
+    }else{
+        grp_label <- cut(1:(ngene-size_grp+1), ngrp-1)
+        grp_loc0 <- split(1:(ngene-size_grp+1), grp_label)
+        for(i in 1:(ngrp-1)){
+            grp_loc[[i]] <- c(grp_loc0[[i]][1]:(grp_loc0[[i]][1]+size_grp-1))
+        }
+        grp_loc[[ngrp]] <- c((ngene-size_grp+1):ngene)
+    }
+    grp_loc
 }
-```
 
 
-
-# To correct the mean-correlation dependency, apply SPQN in the correlation matrix
-```{r spqn, message = FALSE, fig.width = 4, fig.height = 4}
-cor_m_spqn <- normalize_correlation(cor_m, ave_logrpkm, ngrp=20, size_grp=300, ref_grp=18)
-```
-
-# Check the normalization performance, i.e. whether the correlations of genes with different expression levels follow approximately the same distribution.
-
-
-Compare the distribution of correlations in each expression level
-```{r, message = F, fig.width = 4, fig.height = 4}
-plot_signal_condition_exp(cor_m_spqn, ave_logrpkm, 0)
-```
-
-Compare the separation of signal and background conditional on different expression levels
-```{r, message = F, fig.width = 4, fig.height = 4}
-plot_signal_condition_exp(cor_m_spqn, ave_logrpkm, 0.1)
-```
-
-Compare the IQR of correlations for genes in each expression level
-```{r, message=FALSE}
-IQR_spqn_list <- get_IQR_condition_exp(cor_m_spqn, rowData(gtex.4k)$ave_logrpkm)
-boxplot(IQR_spqn_list)
-```
-
-
-Compare the distribution of each bin and the reference bin, using qqplot
-```{r, message = FALSE, fig.width = 3, fig.height = 3}
-for(j in 1:10){
-    qqplot_condition_exp(cor_m_spqn, ave_logrpkm, j, j)
+##### Asssign inner bins
+## In each running group, get a inner group
+.get_grps_inner <- function(grp_loc){
+    grp_loc_inner <- list()
+    ngrp <- length(grp_loc)
+    size_bin <- length(grp_loc[[1]])
+    ngene <- max(grp_loc[[ngrp]])
+    
+    width_tmp <- grp_loc[[2]][1] - grp_loc[[1]][1]
+    grp_loc_inner[[1]] <- c(1:round(size_bin/2+width_tmp/2))
+    
+    for(i in 2:(ngrp-1)){
+        width_tmp <- grp_loc[[i+1]][1] - grp_loc[[i]][1]
+        grp_loc_inner[[i]] <- c( (tail(grp_loc_inner[[i-1]],1)+1) :(tail(grp_loc_inner[[i-1]],1) + width_tmp))
+    }
+    
+    grp_loc_inner[[ngrp]] <- c( (tail(grp_loc_inner[[ngrp-1]],1)+1) : ngene)
+    
+    grp_loc_inner
 }
-```
 
-Find the marginal relationship between the lowest of the two expression bins and IQR 
-```{r, message = FALSE, fig.width = 4, fig.height = 4}
-IQR_unlist <- unlist(lapply(1:10, function(ii) IQR_spqn_list$IQR_cor_mat[ii, ii:10]))
-plot(rep(IQR_spqn_list$grp_mean, times = 1:10),
-     IQR_unlist,
-     xlab="min(average(log2RPKM))", ylab="IQR", cex.lab=1.5, cex.axis=1.2, col="blue")
-```
 
+##### Get rank for each running bin
+.get_bin_rank <- function(cor_obs,grp_loc,grp_loc_inner,cor_ref){
+    rank_bin <- rank_bin_pre <- array(dim=dim(cor_obs))
+    ngrp <- length(grp_loc)
+    size_bin <- length(grp_loc[[1]])
+    
+    l_cor_tmp_ref <- length(cor_ref[upper.tri(cor_ref)])
+    
+    for(i in 1:ngrp){
+        for(j in i:ngrp){
+            cor_bin_tmp <- cor_obs[grp_loc[[i]],grp_loc[[j]]]
+            rank_bin_tmp <- array(dim=dim(cor_bin_tmp))
+            l_cor_tmp <- length(cor_bin_tmp)
+            
+            rank_bin_tmp[1:l_cor_tmp] <- rank(cor_bin_tmp[1:l_cor_tmp])
+            
+            ## Number of diagonals(of full correlation matrix) contained in the bin
+            n_diag <- sum(grp_loc[[i]] %in% grp_loc[[j]])
+            
+            ## Scale the rank of each bin to same scale as rank(cor_ref),
+            ## After scaling, rank_bin could contain non-integars
+            rank_bin_pre[grp_loc[[i]], grp_loc[[j]]] <- rank_bin_tmp
+            rank_bin_pre[grp_loc_inner[[i]],grp_loc_inner[[j]]] <-  1+((rank_bin_pre[grp_loc_inner[[i]], grp_loc_inner[[j]]]-1)/(l_cor_tmp-n_diag-1) *(l_cor_tmp_ref-1))
+            rank_bin_pre[grp_loc_inner[[i]],grp_loc_inner[[j]]][which(rank_bin_pre[grp_loc_inner[[i]],grp_loc_inner[[j]]]>l_cor_tmp_ref)] <- l_cor_tmp_ref
+            
+            rank_bin[grp_loc_inner[[i]],grp_loc_inner[[j]]] <- rank_bin_pre[grp_loc_inner[[i]],grp_loc_inner[[j]]]
+        }
+    }
+    
+    rank_bin
+}
+
+##### Transform rank to cor_est
+.est_cor<-function(rank_bin, cor_ref){
+    cor_adj <- array(dim=dim(rank_bin))
+    cor_ref_sorted <- sort(cor_ref[upper.tri(cor_ref)])
+    
+    up_tri <- upper.tri(cor_adj)
+    
+    ## Find to nearest integars to rank_bin, since rank_bin could contain non-integars
+    rank_bin <- rank_bin[up_tri]
+    rank_bin1 <- rank_bin %/% 1
+
+    ## Assign weights to each rank according to the distance to rank_bin
+    rank_bin_w2 <- (rank_bin - rank_bin1)
+
+    rank_bin2 <- rank_bin1+1
+    rank_bin_w1 <- 1-rank_bin_w2
+
+    ## Find the correlations in the cor_ref corresponding to the two nearest ranks to rank_bin
+    ## Estimate the correlation using weighted average based on the distance to rank_bin
+    rank_bin2[which(rank_bin2>length(cor_ref_sorted))] <- length(cor_ref_sorted)
+    cor_adj[up_tri] <- rank_bin_w1*cor_ref_sorted[rank_bin1]+ rank_bin_w2*cor_ref_sorted[rank_bin2]#1.3min for all genes
+    
+    remove(rank_bin1)
+    remove(rank_bin2)
+    remove(rank_bin_w1)
+    remove(rank_bin_w2)
+    remove(up_tri)
+    remove(rank_bin)
+
+    low_tri <- upper.tri(cor_adj)
+    cor_adj[low_tri] <- t(cor_adj)[low_tri]
+    diag(cor_adj) <- 1
+    cor_adj
+}
+
+normalize_correlation <- function(cor_mat, ave_logrpkm, ngrp, size_grp, ref_grp){
+    rownames(cor_mat)=colnames(cor_mat)=1:length(ave_logrpkm)
+    cor_mat=cor_mat[order(ave_logrpkm),order(ave_logrpkm)]
+    
+    group_loc <- .get_grps(cor_mat, ngrp, size_grp)
+    
+    ## Asssign inner bins
+    group_loc_adj <- .get_grps_inner(group_loc)
+    
+    ## Get rank for each running bin
+    cor_ref <- cor_mat[group_loc[[ref_grp]], group_loc[[ref_grp]]]
+    rank_bin <- .get_bin_rank(cor_mat, group_loc, group_loc_adj, cor_ref)
+    
+    ## Transform rank to cor_adj
+    cor_est <- .est_cor(rank_bin, cor_ref)
+    
+    
+    cor_est=cor_est[order(as.numeric(rownames(cor_est))),
+                    order(as.numeric(colnames(cor_est)))]
+    
+    cor_est
+}
 
