@@ -13,6 +13,6 @@
 \examples{
 a=rnorm(10000)
 b=a/max(abs(a))
-cor_ori=array(b,dim=c(100,100))
-qqplot_condition_exp(cor_ori,1,9)
+cor_mat=array(b,dim=c(100,100))
+qqplot_condition_exp(cor_mat,1,9)
 }
