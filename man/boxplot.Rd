@@ -4,9 +4,7 @@
 \usage{boxplot(IQR_list)}
 \arguments{
 \item{IQR_list}{List, output of get_IQR_condition_exp}
-
 }
-\value{}
 \description{This function allows users to compare the IQR of correlations conditional on expression matrix.
 }
 \examples{
