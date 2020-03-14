@@ -8,7 +8,6 @@
 \item{i}{Integer, number of the tested bin}
 \item{j}{Integer, number of the reference bin}
 }
-\value{}
 \description{This function allows users to compare the distribution of two bins using qqplot.
 }
 \examples{
