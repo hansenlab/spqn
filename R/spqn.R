@@ -55,7 +55,6 @@
     for(i in 1:ngrp){
         for(j in i:ngrp){
             cor_bin_tmp <- cor_obs[grp_loc[[i]],grp_loc[[j]]]
-            if(i==j){cor_bin_tmp=cor_bin_tmp[lower.tri(cor_bin_tmp)]}
             rank_bin_tmp <- array(dim=dim(cor_bin_tmp))
             l_cor_tmp <- length(cor_bin_tmp)
             
