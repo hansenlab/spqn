@@ -128,8 +128,8 @@ normalize_correlation <- function(cor_mat, ave_logrpkm, ngrp, size_grp, ref_grp)
     cor_est <- .est_cor(rank_bin, cor_ref)
     
     
-    cor_est=cor_est[order(as.numeric(rownames(cor_est))),
-                    order(as.numeric(colnames(cor_est)))]
+    cor_est=cor_est[order(as.numeric(rownames(cor_mat))),
+                    order(as.numeric(colnames(cor_mat)))]
     
     cor_est
 }
