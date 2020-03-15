@@ -10,4 +10,4 @@ export("plot_signal_condition_exp",
        "get_IQR_condition_exp",
        "qqplot_condition_exp",
        "normalize_correlation",
-       "boxplot")
+       "box_plot")
