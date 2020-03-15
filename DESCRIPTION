@@ -6,17 +6,18 @@ Authors@R: c(person("Yi", "Wang", role = c("cre", "aut"), email = "mdabrow1@jhu.
 	     person(c("Kasper", "Daniel"), "Hansen", role = "aut"))
 Depends: ggplot2,
          ggridges,
-	 SummarizedExperiment
+	 SummarizedExperiment,
+	 spqnData
 Imports: graphics,
          stats,
 	 utils,
 	 matrixStats,
-	 WGCNA,
+	 WGCNA
 Suggests: BiocStyle,
 	  knitr,
 	  rmarkdown,
 	  tools,
-	  spqnData
+	  
 VignetteBuilder: knitr
 License: Artistic-2.0
 URL: https://github.com/hansenlab/spqn
