@@ -62,7 +62,7 @@ plot_signal_condition_exp(cor_m, ave_logrpkm, 0.1)
 Then compare the IQR of correlations for genes in each expression level, by gridding the correlation matrix into 10 by 10 bins, and compute the interquartile ranges (IQRs) for each bin, and plot them (the width of each box).
 ```{r, message=FALSE}
 IQR_list <- get_IQR_condition_exp(cor_m, rowData(gtex.4k)$ave_logrpkm)
-boxplot(IQR_list)
+box_plot(IQR_list)
 ```
 
 Furtherly, find the marginal relationship between the lowest of the two expression bins and IQR 
@@ -103,7 +103,7 @@ plot_signal_condition_exp(cor_m_spqn, ave_logrpkm, 0.1)
 Compare the IQR of correlations for genes in each expression level
 ```{r, message=FALSE}
 IQR_spqn_list <- get_IQR_condition_exp(cor_m_spqn, rowData(gtex.4k)$ave_logrpkm)
-boxplot(IQR_spqn_list)
+box_plot(IQR_spqn_list)
 ```
 
 
