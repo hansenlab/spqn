@@ -5,12 +5,13 @@ Description: The spqn package contains the function to normalize the local distr
 Authors@R: c(person("Yi", "Wang", role = c("cre", "aut"), email = "mdabrow1@jhu.edu"),
 	     person(c("Kasper", "Daniel"), "Hansen", role = "aut"))
 Depends: ggplot2,
-         ggridges
+         ggridges,
+	 SummarizedExperiment
 Imports: graphics,
          stats,
 	 utils,
 	 matrixStats,
-	 WGCNA
+	 WGCNA,
 Suggests: BiocStyle,
 	  knitr,
 	  rmarkdown,
