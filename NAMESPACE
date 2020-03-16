@@ -5,6 +5,7 @@ importFrom("stats", "IQR", "cor", "density", "qqplot", "sd")
 importFrom("utils", "tail")
 importFrom("matrixStats", "rowMedians")
 importFrom("WGCNA", "removePrincipalComponents")
+import("SummarizedExperiment")
 
 export("plot_signal_condition_exp",
        "get_IQR_condition_exp",
