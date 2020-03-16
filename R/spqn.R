@@ -5,8 +5,8 @@
     grp_loc <- list()
 
     if(size_grp-length(grp_loc0[[1]])<5){
-        grp_label <- cut(seq_lenngene, ngrp)
-        grp_loc0 <- split(seq_lenngene, grp_label)
+        grp_label <- cut(seq_len(ngene), ngrp)
+        grp_loc0 <- split(seq_len(ngene), grp_label)
         for(i in seq_len(ngrp)){
             grp_loc[[i]] <- grp_loc0[[i]]
         }
@@ -52,13 +52,13 @@
     
     l_cor_tmp_ref <- length(cor_ref[upper.tri(cor_ref)])
     
-    for(i in seq_lenngrp){
+    for(i in seq_len(ngrp)){
         for(j in i:ngrp){
             cor_bin_tmp <- cor_obs[grp_loc[[i]],grp_loc[[j]]]
             rank_bin_tmp <- array(dim=dim(cor_bin_tmp))
             l_cor_tmp <- length(cor_bin_tmp)
             
-            rank_bin_tmp[seq_lenl_cor_tmp] <- rank(cor_bin_tmp[seq_lenl_cor_tmp])
+            rank_bin_tmp[seq_len(l_cor_tmp)] <- rank(cor_bin_tmp[seq_len(l_cor_tmp)])
             
             ## Number of diagonals(of full correlation matrix) contained in the bin
             n_diag <- sum(grp_loc[[i]] %in% grp_loc[[j]])
