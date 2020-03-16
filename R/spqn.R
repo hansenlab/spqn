@@ -1,19 +1,19 @@
 .get_grps <- function(cor_mat, ngrp=20, size_grp=400){
     ngene <- nrow(cor_mat)
-    grp_label <- cut(1:(ngene-size_grp+1), ngrp-1)
-    grp_loc0 <- split(1:(ngene-size_grp+1), grp_label)
+    grp_label <- cut(seq_len(ngene-size_grp+1), ngrp-1)
+    grp_loc0 <- split(seq_len(ngene-size_grp+1), grp_label)
     grp_loc <- list()
 
     if(size_grp-length(grp_loc0[[1]])<5){
-        grp_label <- cut(1:ngene, ngrp)
-        grp_loc0 <- split(1:ngene, grp_label)
-        for(i in 1:(ngrp)){
+        grp_label <- cut(seq_lenngene, ngrp)
+        grp_loc0 <- split(seq_lenngene, grp_label)
+        for(i in seq_len(ngrp)){
             grp_loc[[i]] <- grp_loc0[[i]]
         }
     }else{
-        grp_label <- cut(1:(ngene-size_grp+1), ngrp-1)
-        grp_loc0 <- split(1:(ngene-size_grp+1), grp_label)
-        for(i in 1:(ngrp-1)){
+        grp_label <- cut(seq_len(ngene-size_grp+1), ngrp-1)
+        grp_loc0 <- split(seq_len(ngene-size_grp+1), grp_label)
+        for(i in seq_len(ngrp-1)){
             grp_loc[[i]] <- c(grp_loc0[[i]][1]:(grp_loc0[[i]][1]+size_grp-1))
         }
         grp_loc[[ngrp]] <- c((ngene-size_grp+1):ngene)
@@ -31,7 +31,7 @@
     ngene <- max(grp_loc[[ngrp]])
     
     width_tmp <- grp_loc[[2]][1] - grp_loc[[1]][1]
-    grp_loc_inner[[1]] <- c(1:round(size_bin/2+width_tmp/2))
+    grp_loc_inner[[1]] <- c(seq_lenround(size_bin/2+width_tmp/2))
     
     for(i in 2:(ngrp-1)){
         width_tmp <- grp_loc[[i+1]][1] - grp_loc[[i]][1]
@@ -52,13 +52,13 @@
     
     l_cor_tmp_ref <- length(cor_ref[upper.tri(cor_ref)])
     
-    for(i in 1:ngrp){
+    for(i in seq_lenngrp){
         for(j in i:ngrp){
             cor_bin_tmp <- cor_obs[grp_loc[[i]],grp_loc[[j]]]
             rank_bin_tmp <- array(dim=dim(cor_bin_tmp))
             l_cor_tmp <- length(cor_bin_tmp)
             
-            rank_bin_tmp[1:l_cor_tmp] <- rank(cor_bin_tmp[1:l_cor_tmp])
+            rank_bin_tmp[seq_lenl_cor_tmp] <- rank(cor_bin_tmp[seq_lenl_cor_tmp])
             
             ## Number of diagonals(of full correlation matrix) contained in the bin
             n_diag <- sum(grp_loc[[i]] %in% grp_loc[[j]])
@@ -112,7 +112,7 @@
 }
 
 normalize_correlation <- function(cor_mat, ave_logrpkm, ngrp, size_grp, ref_grp){
-    rownames(cor_mat)=colnames(cor_mat)=1:length(ave_logrpkm)
+    rownames(cor_mat)=colnames(cor_mat)=seq_len(length(ave_logrpkm))
     cor_mat=cor_mat[order(ave_logrpkm),order(ave_logrpkm)]
     
     group_loc <- .get_grps(cor_mat, ngrp, size_grp)
