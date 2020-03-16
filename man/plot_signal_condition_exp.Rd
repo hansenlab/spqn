@@ -18,5 +18,5 @@ a=rnorm(10000)
 b=a/max(abs(a))
 cor_ori=array(b,dim=c(100,100))
 ave_logrpkm=c(1:100)
-plot_signal_condition_exp(cor_ori,ave_logrpkm,0.1)
+plot_signal_condition_exp(cor_ori,ave_logrpkm,5)
 }
