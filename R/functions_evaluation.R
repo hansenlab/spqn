@@ -1,7 +1,7 @@
 get_grp_loc <- function(cor_matrix, ngrp=10){
     ngene <- nrow(cor_matrix)
-    grp_label <- cut(1:ngene, ngrp)
-    grp_loc <- split(1:ngene, grp_label)
+    grp_label <- cut(seq_len(ngene), ngrp)
+    grp_loc <- split(seq_len(ngene), grp_label)
     return(grp_loc)
 }
 
@@ -13,7 +13,7 @@ get_IQR_condition_exp <- function(cor_mat, ave_logrpkm){
   
     IQR_cor_mat= array(dim=c(10,10))
     grp_mean <- c()
-    for(i in 1:10) {
+    for(i in seq_len(10)) {
         cor_tmp <- cor_mat[grp_loc[[i]],grp_loc[[i]]]
         IQR_cor_mat[i,i] <- IQR(cor_tmp[upper.tri(cor_tmp)])
         if(i < 10){ 
@@ -58,9 +58,9 @@ plot_signal_condition_exp <- function(cor_mat, ave_logrpkm, percent_sig) {
     if(percent_sig==0){
         ngrp=10
         ngene <- ncol(cor_mat)
-        grp_label <- cut(1:ngene, ngrp)
-        grp_loc <- split(1:ngene, grp_label) 
-        for(i in 1:10) {
+        grp_label <- cut(seq_len(ngene), ngrp)
+        grp_loc <- split(seq_len(ngene), grp_label) 
+        for(i in seq_len(10)) {
             cor_tmp <- cor_mat[grp_loc[[i]], grp_loc[[i]]]
             cor_tmp <- cor_tmp[upper.tri(cor_tmp)]
             if(i==1) {
@@ -87,12 +87,12 @@ plot_signal_condition_exp <- function(cor_mat, ave_logrpkm, percent_sig) {
         list_cor_sig <- list_cor_back <- grp_back <- grp_sig <- c()
         grp_locs <- get_grp_loc(cor_mat)
   
-        for(ngrp in 1:10) {
+        for(ngrp in seq_len(10)) {
             loc_back <- grp_locs[[ngrp]]
             cor_back <- cor_mat[loc_back,loc_back]
             cor_back <- cor_back[upper.tri(cor_back)]
             order_cor_ori_grp <- order(abs(cor_back), decreasing=TRUE)
-            cor_signal_ori <- cor_back[order_cor_ori_grp[1:nsignal_grp]]
+            cor_signal_ori <- cor_back[order_cor_ori_grp[seq_len(nsignal_grp)]]
     
             list_cor_sig <- c(list_cor_sig,cor_signal_ori)
             list_cor_back <- c(list_cor_back, cor_back)
@@ -111,7 +111,7 @@ plot_signal_condition_exp <- function(cor_mat, ave_logrpkm, percent_sig) {
                 alpha = .8, color = "white") +
             labs(x = "correlation",
                 y = "bin" )  +
-            scale_y_discrete(limits=c(1:10)) +
+            scale_y_discrete(limits=c(seq_len(10))) +
             scale_fill_cyclical(
                 labels = c("background","signal"),
                 values = c("#0000ff", "#ff0000"),
@@ -147,9 +147,9 @@ box_plot<-function(IQR_list){
   ggplot() + 
     geom_rect(data=d, mapping=aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2), color="black", alpha=0) +
     xlab("average(log2RPKM)")+ylab("average(log2RPKM)")   +
-    scale_y_discrete(limits=c(1:10)+c(0:9)*min(IQR_cor_mat)/10,
+    scale_y_discrete(limits=c(seq_len(10))+c(0:9)*min(IQR_cor_mat)/10,
                      labels=grp_mean)+
-    scale_x_discrete(limits=c(1:10)+c(0:9)*min(IQR_cor_mat)/10,
+    scale_x_discrete(limits=c(seq_len(10))+c(0:9)*min(IQR_cor_mat)/10,
                      labels=grp_mean) + theme_bw()+
     theme(axis.title.x = element_text(size=20),axis.title.y = element_text(size=20),axis.text=element_text(size=20))
 }
