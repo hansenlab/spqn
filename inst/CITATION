@@ -1,15 +1,14 @@
 c(bibentry(bibtype = "Article",
            key = "spqnPreprint",
-           title = "{Co-expression analysis is biased by a mean-correlation relationship}", 
+           title = "{Co-expression analysis is biased by a mean-correlation relationship}",
            author = c(
                person("Yi", "Wang"),
                person(c("Stephanie", "C."), "Hicks"),
                person(c("Kasper", "D."), "Hansen")
            ),
-           year = 2020,
+           year = "2020",
            journal = "bioRxiv",
            pages = "2020.02.13.944777",
            doi = "10.1101/2020.02.13.944777",
-           header = "SpQN is described in:"
-           )
+           header = "The spqn package is described in:")
   )
