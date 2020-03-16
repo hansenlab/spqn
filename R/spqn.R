@@ -31,7 +31,7 @@
     ngene <- max(grp_loc[[ngrp]])
     
     width_tmp <- grp_loc[[2]][1] - grp_loc[[1]][1]
-    grp_loc_inner[[1]] <- c(seq_lenround(size_bin/2+width_tmp/2))
+    grp_loc_inner[[1]] <- c(seq_len(round(size_bin/2+width_tmp/2)))
     
     for(i in 2:(ngrp-1)){
         width_tmp <- grp_loc[[i+1]][1] - grp_loc[[i]][1]
