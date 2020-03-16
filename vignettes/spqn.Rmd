@@ -17,13 +17,14 @@ output:
     toc_float: true
 ---
 
-This is a vignettes for examining and visualizing the mean-correlation dependency in a correlation matrix, applying spatial quantile normalization (SpQN) to remove such dependency,as well as examining the normalized the correlation matrix.
+The spqn package contains an implementation of spatial quantile normalization (SpQN) as described in [@spqnPreprint]. This is a method for adjusting for a mean-correlation relationship in a correlation matrix. The main application of this method is in co-expression analysis.
 
-The SpQN method is described in [@spqnPreprint]. 
+The package contains various plotting functions for assessing the mean-correlation relationship, mirroring plots in [@spqnPreprint].
+
+We believe spatial quantile normalization has applications outside of co-expression analysis including beyond correlation matrices. However, the _implementation_ in this package is currently focused on correlation matrices.
 
 
 # Preliminaries
-
 
 Let's load the package and some example data.
 
@@ -52,7 +53,7 @@ ave_logrpkm <- rowData(gtex.4k)$ave_logrpkm
 We now recreate a number of diagnostic plots which illustrate the mean-correlation relationship
 
 First, to visualize the mean-correlation relationship, group the genes by expression level and compare the distribution of correlations in each group.
-```{r, message = F, fig.width = 4, fig.height = 4}
+```{r, message=FALSE, fig.width=4, fig.height=4}
 plot_signal_condition_exp(cor_m, ave_logrpkm, 0)
 ```
 
@@ -85,6 +86,7 @@ for(j in 1:10){
 
 
 # To correct the mean-correlation dependency, apply SPQN in the correlation matrix
+
 ```{r spqn, message = FALSE, fig.width = 4, fig.height = 4}
 cor_m_spqn <- normalize_correlation(cor_m, ave_logrpkm, ngrp=20, size_grp=300, ref_grp=18)
 ```
