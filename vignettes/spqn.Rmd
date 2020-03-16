@@ -19,6 +19,8 @@ output:
 
 This is a vignettes for examining and visualizing the mean-correlation dependency in a correlation matrix, applying spatial quantile normalization (SpQN) to remove such dependency,as well as examining the normalized the correlation matrix.
 
+The SpQN method is described in [@spqnPreprint]. 
+
 
 # Preliminaries
 
