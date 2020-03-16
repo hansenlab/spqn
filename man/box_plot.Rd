@@ -7,6 +7,7 @@
 }
 \description{This function allows users to compare the IQR of correlations conditional on expression matrix.
 }
+\value{A plot with boxes that shows the IQR of each expression level}
 \examples{
 a=rnorm(10000)
 b=a/max(abs(a))
