@@ -8,6 +8,7 @@ author:
 package: SpQN
 abstract: >
   A guide to using spqn for co-expression analysis
+bibliography: spqn.bib
 vignette: >
   %\VignetteIndexEntry{spqn User's Guide}
   %\VignetteEngine{knitr::rmarkdown}
@@ -17,11 +18,13 @@ output:
     toc_float: true
 ---
 
-The spqn package contains an implementation of spatial quantile normalization (SpQN) as described in [@spqnPreprint]. This is a method for adjusting for a mean-correlation relationship in a correlation matrix. The main application of this method is in co-expression analysis.
+# Introduction
 
-The package contains various plotting functions for assessing the mean-correlation relationship, mirroring plots in [@spqnPreprint].
+The spqn package contains an implementation of spatial quantile normalization (SpQN) as described in [@spqnPreprint]. In this work we describe how correlation matrices estimated from gene expression data exhibits a _mean-correlation_ relationship, in which highly expressed genes appear more correlated than lowly expressed genes. This relationship is not observed in protein-protein interaction networks which suggests it is technical rather than biological. To correct for this, we developed SpQN, a method for normalizing the correlation matrix. In our work, we show how correcting for this relationship increases the correlations involving transcription factors, an important class of gene regulators.
 
 We believe spatial quantile normalization has applications outside of co-expression analysis including beyond correlation matrices. However, the _implementation_ in this package is currently focused on correlation matrices.
+
+The package contains various plotting functions for assessing the mean-correlation relationship, mirroring plots in [@spqnPreprint].
 
 
 # Preliminaries
