@@ -23,4 +23,4 @@ URL: https://github.com/hansenlab/spqn
 biocViews: GeneExpression, Transcriptomics, RNASeq， Normalization
 BugReports: https://github.com/hansenlab/spqn/issues
 LazyData: yes
-biocViews:
+biocViews: NetworkInference, GraphAndNetwork, Normalization
