@@ -141,30 +141,27 @@ Using SpQN is relatively easy. In the function normalize_correlation, Parameter 
 cor_m_spqn <- normalize_correlation(cor_m, ave_logrpkm, ngrp=20, size_grp=300, ref_grp=18)
 ```
 
-FIXME: explain the arguments.
-
 # Assess the impact of normalization
 
-As QC, we make the same plots we did above, but with the corrected data.
+To evaluate the performance of SpQN, we make the same plots as before, but using the normalized correlation matrix.
 
-
-Compare the distribution of correlations in each expression level
+Distribution of correlations for bins on the diagonal of the correlation matrix.
 ```{r, message = FALSE, fig.width = 4, fig.height = 4}
 plot_signal_condition_exp(cor_m_spqn, ave_logrpkm, 0)
 ```
 
-Compare the separation of signal and background conditional on different expression levels
+Distribution of predicted signal and background correlations for bins on the diagonal of the correlation matrix.
 ```{r, message = FALSE, fig.width = 4, fig.height = 4}
 plot_signal_condition_exp(cor_m_spqn, ave_logrpkm, 0.1)
 ```
 
-Compare the IQR of correlations for genes in each expression level
+IQR of bins across the entire correlation matrix.
 ```{r, message=FALSE}
 IQR_spqn_list <- get_IQR_condition_exp(cor_m_spqn, rowData(gtex.4k)$ave_logrpkm)
 box_plot(IQR_spqn_list)
 ```
 
-Compare the distribution of each bin and the reference bin, using qqplot
+Q-Qplot to compare the distribution for the bin with the 2nd highest expression level on the diagonal with other bins on the diagonal.
 ```{r, message = FALSE, fig.width = 3, fig.height = 3}
 par(mfrow = c(3,3))
 for(j in 1:10){
@@ -172,7 +169,7 @@ for(j in 1:10){
 }
 ```
 
-Find the marginal relationship between the lowest of the two expression bins and IQR 
+Marginal relationship between IQR and the expression level of the lower expressed group for each bin.
 ```{r, message = FALSE, fig.width = 4, fig.height = 4}
 IQR_unlist <- unlist(lapply(1:10, function(ii) IQR_spqn_list$IQR_cor_mat[ii, ii:10]))
 plot(rep(IQR_spqn_list$grp_mean, times = 1:10),
