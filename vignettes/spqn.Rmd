@@ -93,25 +93,28 @@ assay(gtex.4pcs) <- removePrincipalComponents(logrpkm.0pcs, n = 4)
 We now recreate a number of diagnostic plots which illustrate the mean-correlation relationship. These plots are similar to that is being presented in [@spqnPreprint].
 
 
-To compare the distribution of correlation across different expression levels, we re-arrranged the correlation matrix by sortng the row and column by the expression level, and partitioned the correlation matrix into same-size bins, then used each bin to estimate the distribution of correlation for genes with that expression level. Here we used 10 by 10 bins to partition the correlation matrix. 
+To compare the distribution of correlation across different expression levels, we re-arrrange the correlation matrix by sortng the row and column by the expression level, and partitioned the correlation matrix into same-size bins, then used each bin to estimate the distribution of correlation for genes with that expression level. Here we use 10 by 10 bins. Each bin corresponds to two groups of genes that correspodnd to two expression levels. 
 
-Each bin corresponds to two expression levels. We first looked into the bins on the diagnal, where the two groups of genes have the same expression level. We looked at the distribution of the correlations within each of these bins. We find that the correlations of highly expressed genes are more variant than those of lowly expressed genes.
+We first looked into the bins on the diagnal, where the two groups of genes have the same expression level. We looked at the distribution of the correlations within each of these bins. We find that the correlations of highly expressed genes are more variant than those of lowly expressed genes. We call such relationship between gene expression level and the distribution of correlation, as mean correlation relationship.
+
 ```{r, message=FALSE, fig.width=4, fig.height=4}
 plot_signal_condition_exp(cor_m, ave_logrpkm, 0)
 ```
 
-Next, to examine the downstream effect of the mean-correlation relationship, compare the separation of signal and background conditional on different expression levels, i.e. compare the distribution of correlations between signals and background in each group. Here we define signal as 0.1% highest absolute correlations in each group.
+
+Next, we examine the impact of this mean-correlation relationship on the downstream analysis. 
+A number of studies predict the co-expressed genes by setting a threshold. We set 0.1% highest correlations as predicted signals in each bin. We compared the distibution of signals for bins on the diagonal. We find that the the predicted signals are stronger for high expressed genes and weaker for low expressed genes. Because of such bias, the true signals among low expressed genes could be hidden and may not be detected. 
 ```{r, message = FALSE, fig.width = 4, fig.height = 4}
 plot_signal_condition_exp(cor_m, ave_logrpkm, 0.1)
 ```
 
-Then compare the IQR of correlations for genes in each expression level, by gridding the correlation matrix into 10 by 10 bins, and compute the interquartile ranges (IQRs) for each bin, and plot them (the width of each box).
+Next we looked furtherly into the bins across the entire correlation matrix. We quantify the variance inside a bin using inter-quantile range (IQR), which is the distance from the 1st and 3rd quantile. We use the width of box in the plot to denote IQR. We observe that the increase of expression level for either gene would cause an increase of the IQR  
 ```{r, message=FALSE}
 IQR_list <- get_IQR_condition_exp(cor_m, rowData(gtex.4k)$ave_logrpkm)
 box_plot(IQR_list)
 ```
 
-Furthermore, find the marginal relationship between the lowest of the two expression bins and IQR 
+We also plot the marginal relationship between IQR of correlation and the expression level of the lower expression group for each bin, and we also see a positive relationship.
 ```{r, message = FALSE, fig.width = 4, fig.height = 4}
 IQR_unlist <- unlist(lapply(1:10, function(ii) IQR_list$IQR_cor_mat[ii, ii:10]))
 plot(rep(IQR_list$grp_mean, times = 1:10),
@@ -119,7 +122,7 @@ plot(rep(IQR_list$grp_mean, times = 1:10),
      xlab="min(average(log2RPKM))", ylab="IQR", cex.lab=1.5, cex.axis=1.2, col="blue")
 ```
 
-Next, compare the distribution between each bin and the reference bin (here we use the (9,9) bin) by qqplot 
+We furtherly examined the difference of the distributions using qqplot. We used the bins with the second highest expression level on the diagonal as reference, and compared the distribution with other bins in the diagonal. We observe that the distributions not only differs in the scale, but also in the shape. 
 ```{r, message = FALSE, fig.width = 4, fig.height = 4}
 par(mfrow = c(3,3))
 for(j in 1:10){
@@ -130,8 +133,9 @@ for(j in 1:10){
 
 
 # Using SpQN
+To avoid the bias in the co-expression analysis, we develop a normalization method for correlation matrix to remove the meam correlation relationship, named as spatial quantile normalization (SpQN). The main idea is to use bins to partition the correlation matrix with genes sorted by exp level, and then apply quantile normalization for each bin. To smooth the normalization, we used a larger bin to approximate the empirical distribution of the inner bin.  And we applied 1-dimension quantile normalization on the inner bins using its approximated distribution. The target distribution we used here is the bin with the second highest expression level on the diagonal. 
 
-Using SpQN is relatively easy. Currently, we assume that the correlation matrix is sorted by expression level as shown above. With that in mind, we do
+Using SpQN is relatively easy. In the function normalize_correlation, Parameter ngrp is the row/column number of bins that we use to partition the correlation matrix. For example, setting ngrp=20 means to partition the correlation matrix into 20 by 20 bins. Parameter size_grp is the size of the outter bins that used to appriximate the distribution of the inner bins, in order to smooth the normalization. Parameter ref_grp is the location of the reference bin on the diagonal, whose distribution will be used as target distribution in the normalization.
 
 ```{r spqn, message = FALSE, fig.width = 4, fig.height = 4}
 cor_m_spqn <- normalize_correlation(cor_m, ave_logrpkm, ngrp=20, size_grp=300, ref_grp=18)
