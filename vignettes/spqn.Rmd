@@ -35,7 +35,6 @@ Let's load the package and some example data.
 library(spqn)
 library(spqnData)
 library(SummarizedExperiment)
-data(gtex.4k)
 ```
 
 This dataset contains 4,000 genes from the GTEx tissue "Adipose Subcutaneous" which we use as exemplar tissue in our preprint [@spqnPreprint]. The data is from GTEx v6p. The genes have been restricted to a random sample of 4,000 genes from genes which are
@@ -44,9 +43,11 @@ This dataset contains 4,000 genes from the GTEx tissue "Adipose Subcutaneous" wh
 
 The data is counts (from the GTEx website) which has been transformed to $\log_2(\text{RPKM})$ and 4 principal components have been removed from the data matrix. Removing principal components from the data matrix also results in mean-centering. For SpQN we need access to the gene expression level, which we take as the mean or median expression level across samples. So this quantity needs to be computed (and stored) prior to removing principal components. For this example data, we have stored the average expression value on the log-RPKM scale in `rowData(gtex.4k)$ave_logrpkm`.
 
-First we sort the genes according to expression level and then calculate the correlation matrix
-```{r cor_m, message=FALSE}
-gtex.4k <- gtex.4k[order(rowData(gtex.4k)$ave_logrpkm),]
+
+
+To compare the distribution of correlation across different expression levels, we get the correlation matrix after sorting the genes by their expression level.
+ ```{r cor_m, message=FALSE}
+data(gtex.4k)
 cor_m <- cor(t(assay(gtex.4k)))
 ave_logrpkm <- rowData(gtex.4k)$ave_logrpkm
 ```
@@ -91,7 +92,10 @@ assay(gtex.4pcs) <- removePrincipalComponents(logrpkm.0pcs, n = 4)
 
 We now recreate a number of diagnostic plots which illustrate the mean-correlation relationship. These plots are similar to that is being presented in [@spqnPreprint].
 
-First, to visualize the mean-correlation relationship, group the genes by expression level and compare the distribution of correlations in each group.
+
+To compare the distribution of correlation across different expression levels, we re-arrranged the correlation matrix by sortng the row and column by the expression level, and partitioned the correlation matrix into same-size bins, then used each bin to estimate the distribution of correlation for genes with that expression level. Here we used 10 by 10 bins to partition the correlation matrix. 
+
+Each bin corresponds to two expression levels. We first looked into the bins on the diagnal, where the two groups of genes have the same expression level. We looked at the distribution of the correlations within each of these bins. We find that the correlations of highly expressed genes are more variant than those of lowly expressed genes.
 ```{r, message=FALSE, fig.width=4, fig.height=4}
 plot_signal_condition_exp(cor_m, ave_logrpkm, 0)
 ```
