@@ -1,7 +1,7 @@
-\name{box_plot}
-\alias{box_plot}
+\name{plot_IQR_condition_exp}
+\alias{plot_IQR_condition_exp}
 \title{Plot the IQRs of bins across the correlation matrix}
-\usage{box_plot(IQR_list)}
+\usage{plot_IQR_condition_exp(IQR_list)}
 \arguments{
 \item{IQR_list}{List, output of get_IQR_condition_exp}
 }
@@ -14,5 +14,5 @@ b=a/max(abs(a))
 cor_mat=array(b,dim=c(100,100))
 ave_logrpkm=c(1:100)
 IQR_list=get_IQR_condition_exp(cor_mat,ave_logrpkm)
-box_plot(IQR_list)  
+plot_IQR_condition_exp(IQR_list)  
 }
