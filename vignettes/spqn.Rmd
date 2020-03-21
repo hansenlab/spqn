@@ -157,7 +157,7 @@ plot_IQR_condition_exp(IQR_spqn_list)
 ```
 
 Q-Q plot to compare the distribution for the bin with the 2nd highest expression level on the diagonal with other bins on the diagonal.
-```{r, message = FALSE, fig.width = 3, fig.height = 3}
+```{r, message = FALSE, fig.width = 4, fig.height = 4}
 par(mfrow = c(3,3))
 for(j in 1:10){
     qqplot_condition_exp(cor_m_spqn, ave_logrpkm, j, j)
