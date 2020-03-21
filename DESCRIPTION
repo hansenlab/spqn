@@ -11,12 +11,12 @@ Imports: graphics,
          stats,
 	 utils,
 	 matrixStats,
-	 WGCNA,
-	 spqnData
+	 WGCNA
 Suggests: BiocStyle,
 	  knitr,
 	  rmarkdown,
-	  tools  
+	  tools,
+	  spqnData
 VignetteBuilder: knitr
 License: Artistic-2.0
 URL: https://github.com/hansenlab/spqn
