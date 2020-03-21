@@ -104,7 +104,7 @@ plot_signal_condition_exp <- function(cor_mat, ave_logrpkm, percent_sig) {
     }
 }
 
-box_plot <- function(IQR_list){
+plot_IQR_condition_exp <- function(IQR_list){
     IQR_cor_mat <- IQR_list$IQR_cor_mat
     grp_mean <- IQR_list$grp_mean
     IQR_cor_mat2 <- round(IQR_cor_mat,3)
