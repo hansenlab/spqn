@@ -11,9 +11,9 @@
 \description{This function allows users to compare the distribution of two bins using qqplot.}
 \value{A Q-Q plot that compares the distribution of two bins}
 \examples{
-a=rnorm(10000)
-b=a/max(abs(a))
-cor_mat=array(b,dim=c(100,100))
-ave_logrpkm=c(1:100)
-qqplot_condition_exp(cor_mat,ave_logrpkm,1,9)
+if(require(spqnData)) {
+  data(gtex.4k)
+  cor_mat <- cor(t(assay(gtex.4k)))
+  ave_logrpkm <- rowData(gtex.4k)$ave_logrpkm
+  qqplot_condition_exp(cor_mat,ave_logrpkm,1,9)}
 }
