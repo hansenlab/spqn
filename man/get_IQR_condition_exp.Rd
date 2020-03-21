@@ -10,13 +10,10 @@
 \description{This function allows users to compare the IQR of bins at different location of the correlation matrix.
 }
 \examples{
-data(gtex.4k)
-cor_mat <- cor(t(assay(gtex.4k)))
-ave_logrpkm <- rowData(gtex.4k)$ave_logrpkm
-
-# a=rnorm(10000)
-# b=a/max(abs(a))
-# cor_mat=array(b,dim=c(100,100))
-# ave_logrpkm=c(1:100)
-get_IQR_condition_exp(cor_mat,ave_logrpkm)
+  if(require(spqnData)) {
+    data(gtex.4k)
+    cor_mat <- cor(t(assay(gtex.4k)))
+    ave_logrpkm <- rowData(gtex.4k)$ave_logrpkm
+    get_IQR_condition_exp(cor_mat,ave_logrpkm)
+}
 }
