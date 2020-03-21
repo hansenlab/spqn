@@ -24,9 +24,9 @@ The normalized correlation matrix, where the distribution of correlations are ap
 The normalize_correlation function allows users to normalize the correlation matrix, such that the distributions of correlations are not dependent of gene expression levels.
 }
 \examples{
-a=rnorm(10000)
-b=a/max(abs(a))
-cor_ori=array(b,dim=c(100,100))
-ave_logrpkm=c(1:100)
-normalize_correlation(cor_ori,ave_logrpkm,ngrp=10,size_grp=15,ref_grp=9)
+if(require(spqnData)){
+  data(gtex.4k)
+  cor_ori <- cor(t(assay(gtex.4k)))
+  ave_logrpkm <- rowData(gtex.4k)$ave_logrpkm
+  normalize_correlation(cor_ori,ave_logrpkm,ngrp=10,size_grp=15,ref_grp=9)}
 }
