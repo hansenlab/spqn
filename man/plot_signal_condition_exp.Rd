@@ -14,9 +14,9 @@ plot_signal_condition_exp(cor_mat, ave_logrpkm, percent_sig)
 This function allows users to visualize the separation between signals and background, conditional on expression levels.
 }
 \examples{
-a=rnorm(10000)
-b=a/max(abs(a))
-cor_ori=array(b,dim=c(100,100))
-ave_logrpkm=c(1:100)
-plot_signal_condition_exp(cor_ori,ave_logrpkm,5)
+if(require(spqnData)) {
+  data(gtex.4k)
+  cor_mat <- cor(t(assay(gtex.4k)))
+  ave_logrpkm <- rowData(gtex.4k)$ave_logrpkm
+  plot_signal_condition_exp(cor_mat,ave_logrpkm,5)}
 }
