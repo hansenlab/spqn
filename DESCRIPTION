@@ -22,4 +22,4 @@ Suggests: BiocStyle,
 VignetteBuilder: knitr
 URL: https://github.com/hansenlab/spqn
 BugReports: https://github.com/hansenlab/spqn/issues
-biocViews: NetworkInference, GraphAndNetwork, Normalization, GeneExpression, Transcriptomics, RNASeq
+biocViews: NetworkInference, GraphAndNetwork, Normalization
