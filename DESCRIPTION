@@ -22,4 +22,4 @@ License: Artistic-2.0
 URL: https://github.com/hansenlab/spqn
 BugReports: https://github.com/hansenlab/spqn/issues
 LazyData: yes
-biocViews: NetworkInference, GraphAndNetwork, Normalization, GeneExpression, Transcriptomics, RNASeq，
+biocViews: NetworkInference, GraphAndNetwork, Normalization, GeneExpression, Transcriptomics, RNASeq
