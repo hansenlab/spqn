@@ -6,14 +6,14 @@ Authors@R: c(person("Yi", "Wang", role = c("cre", "aut"), email = "yiwangthu4@gm
 	     person(c("Kasper", "Daniel"), "Hansen", role = "aut"))
 License: Artistic-2.0
 LazyData: TRUE
-Depends: ggplot2,
-         ggridges,
-	 SummarizedExperiment
 Imports: graphics,
          stats,
 	 utils,
 	 matrixStats,
 	 WGCNA
+Depends: ggplot2,
+         ggridges,
+	 SummarizedExperiment
 Suggests: BiocStyle,
 	  knitr,
 	  rmarkdown,
