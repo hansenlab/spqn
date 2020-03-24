@@ -5,7 +5,6 @@ Description: The spqn package contains the function to normalize the local distr
 Authors@R: c(person("Yi", "Wang", role = c("cre", "aut"), email = "yiwangthu4@gmail.com"),
 	     person(c("Kasper", "Daniel"), "Hansen", role = "aut"))
 License: Artistic-2.0
-LazyData: TRUE
 Imports: graphics,
          stats,
 	 utils,
