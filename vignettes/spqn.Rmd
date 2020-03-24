@@ -45,7 +45,7 @@ The data is counts (from the GTEx website) which has been transformed to $\log_2
 
 
 
-To compare the distribution of correlation across different expression levels, we get the correlation matrix after sorting the genes by their expression level.
+To compare the distribution of correlation across different expression levels, we get the correlation matrix and average gene expression level for each gene.
  ```{r cor_m, message=FALSE}
 data(gtex.4k)
 cor_m <- cor(t(assay(gtex.4k)))
