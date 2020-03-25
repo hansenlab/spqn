@@ -125,14 +125,13 @@ plot_IQR_condition_exp <- function(IQR_list){
     y2 <- as.numeric((IQR_cor_mat/2)+sd_grps_offset_y)
     IQR_cor_mat <- round(IQR_cor_mat,3)
     d <- data.frame(x1,x2,y1,y2,sd)
-    grp_mean=round(grp_mean,2)
 
     ggplot() + 
         geom_rect(data=d, mapping=aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2), color="black", alpha=0) +
         xlab("average(log2RPKM)")+ylab("average(log2RPKM)")   +
         scale_y_discrete(limits=c(seq_len(10))+c(0:9)*min(IQR_cor_mat)/10,
-                         labels=grp_mean)+
+                         labels=round(grp_mean,1))+
         scale_x_discrete(limits=c(seq_len(10))+c(0:9)*min(IQR_cor_mat)/10,
-                         labels=grp_mean) + theme_bw()+
+                         labels=round(grp_mean,1)) + theme_bw()+
         theme(axis.title.x = element_text(size=20),axis.title.y = element_text(size=20),axis.text=element_text(size=20))
 }
