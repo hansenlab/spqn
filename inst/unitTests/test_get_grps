@@ -1,10 +1,9 @@
-library(RUnit)
-library(hash)
 
 
 grp_loc_target = list()
 for(i in 1:10){
   grp_loc_target[[i]]=c(((i-1)*10+1) : (i*10))
 }
+
 grp_loc_assigend = .grp_loc(cor_mat=array(dim=c(10,10),ngrp=10,size_grp=10)
 checkEquals(grp_loc_target,grp_loc_assigend)
