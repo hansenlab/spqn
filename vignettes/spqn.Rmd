@@ -66,14 +66,17 @@ Finally, following [@Parsana2019] we strongly recommend removing principal compo
 Example code is as follows, the starting point is a `SummarizedExperiment` called `gtex` with the relevant data. It has two relevant columns in `rowData(gtex)`. One column is `gene_length` and another is `gene_type`.
 
 ```{r, examplePreproc, eval=FALSE}
+# only keep coding genes and lincRNA in the counts matrix
 gtex <- gtex[rowData(gtex)$gene_type %in%
                           c("lincRNA", "protein_coding"), ]
 
+# normalize the counts matrix by log2rpkm
 cSums <- colSums(assay(gtex))
 logrpkm <- sweep(log2(assay(gtex) + 0.5), 2, FUN = "-",
                  STATS = log2(cSums / 10^6))
 logrpkm <- logrpkm - log2(rowData(gtex)$gene_length / 1000)
 
+# only keep those genes with median log2rpkm above 0
 wh.expressed  <- which(rowMedians(logrpkm) > 0)
 
 gtex.0pcs <- gtex[wh.expressed,]
@@ -82,8 +85,8 @@ ave_logrpkm <- rowMeans(logrpkm.0pcs)
 assays(gtex.0pcs) <- SimpleList(logrpkm = logrpkm.0pcs)
 rowData(gtex.0pcs)$ave_logrpkm <- ave_logrpkm
 
-gtex.4pcs <- gtex.0pcs
 # remove PCs from the gene expression matrix after scaling each gene to have mean=0 and variance=1
+gtex.4pcs <- gtex.0pcs
 assay(gtex.4pcs) <- removePrincipalComponents(t(scale(t(logrpkm.0pcs))), n = 4)
 ```
 
