@@ -20,7 +20,8 @@ Suggests: BiocStyle,
 	  spqnData,
 	  digest,
 	  RUnit,
-	  hash
+	  hash,
+	  useful
 VignetteBuilder: knitr
 URL: https://github.com/hansenlab/spqn
 BugReports: https://github.com/hansenlab/spqn/issues
