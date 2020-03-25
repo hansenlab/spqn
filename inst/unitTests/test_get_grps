@@ -1,1 +1,10 @@
+library(RUnit)
+library(hash)
+
+checkEquals()
+
+grp_loc_true=list()
+for(i in 1:10){
+  grp_loc_true[[i]]=c( ((i-1)*10+1) : (i*10))
+}
 
