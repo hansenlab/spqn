@@ -4,7 +4,6 @@ shorttitle: "spqn guide"
 author:
   - Yi Wang
   - Kasper D. Hansen
-  - Stephanie C. Hicks
 package: SpQN
 abstract: >
   A guide to using spqn for co-expression analysis
@@ -20,7 +19,7 @@ output:
 
 # Introduction
 
-The spqn package contains an implementation of spatial quantile normalization (SpQN) as described in [@spqnPreprint]. In this work we describe how correlation matrices estimated from gene expression data exhibits a _mean-correlation_ relationship, in which highly expressed genes appear more correlated than lowly expressed genes. This relationship is not observed in protein-protein interaction networks which suggests it is technical rather than biological. To correct for this, we developed SpQN, a method for normalizing the correlation matrix. In our work, we show how correcting for this relationship increases the correlations involving transcription factors, an important class of gene regulators.
+The spqn package contains an implementation of spatial quantile normalization (SpQN) as described in [@spqnPreprint]. In this work we describe how correlation matrices estimated from gene expression data exhibits a _mean-correlation_ relationship, in which highly expressed genes appear more correlated than lowly expressed genes. This relationship is not observed in protein-protein interaction networks, which suggests it is technical rather than biological. To correct for this bias in estimation, we developed SpQN, a method for normalizing the correlation matrix. In our work, we show how correcting for this relationship increases the correlations involving transcription factors, an important class of gene regulators.
 
 We believe spatial quantile normalization has applications outside of co-expression analysis including beyond correlation matrices. However, the _implementation_ in this package is currently focused on correlation matrices.
 
@@ -41,11 +40,11 @@ This dataset contains 4,000 genes from the GTEx tissue "Adipose Subcutaneous" wh
 - Either protein-coding or lincRNAs
 - Expressed (median expression greater than 0 on the $\log_2(\text{RPKM})$ scale
 
-The data is counts (from the GTEx website) which has been transformed to $\log_2(\text{RPKM})$ and 4 principal components have been removed from the data matrix. Removing principal components from the data matrix also results in mean-centering. For SpQN we need access to the gene expression level, which we take as the mean or median expression level across samples. So this quantity needs to be computed (and stored) prior to removing principal components. For this example data, we have stored the average expression value on the log-RPKM scale in `rowData(gtex.4k)$ave_logrpkm`.
+The data is counts (from the GTEx website) of bulk RNA-seq data which has been transformed to the expression matrix in the $\log_2(\text{RPKM})$ scale. Each gene has been scaled to have mean 0 and variance 1, and 4 principal components have been removed from the data matrix. For SpQN we need access to the gene expression level, which we take as the mean or median expression level across samples. So this quantity needs to be computed (and stored) prior to removing principal components. For this example data, we have stored the average expression value on the log-RPKM scale in `rowData(gtex.4k)$ave_logrpkm`.
 
 
 
-To compare the distribution of correlation across different expression levels, we get the correlation matrix and average gene expression level for each gene.
+To compare the distribution of correlation across different expression levels, we get the correlation matrix and average gene expression level ($\log_2(\text{RPKM})$) for each gene.
  ```{r cor_m, message=FALSE}
 data(gtex.4k)
 cor_m <- cor(t(assay(gtex.4k)))
@@ -56,11 +55,11 @@ ave_logrpkm <- rowData(gtex.4k)$ave_logrpkm
 
 **Note**: code in this section is not being evaluated.
 
-We assume you have counts (or something similar) stored in a `SummarizedExperiment`. In our case, we have downloaded the GTEx v6p counts from the GTEx portal website (code is available in the `spqnData` package inside `scripts`. 
+We assume you have counts (or something similar) stored in a `SummarizedExperiment`. In our case, we have downloaded the GTEx v6p counts from the GTEx portal website (code is available in the `spqnData` package inside `scripts`). 
 
 It makes sense to do some correction for library size. In this data we have simply divided by the number of reads in millions. There are multiple normalization strategies for estimating a library size correction factor. The literature shows that using such methods are *essential* when comparing expression across different tissues / cell types / conditions. However, here we are looking at correlation patterns **within** tissue.
 
-We also need to remove genes which are not expressed. The threshold we have been using for GTEx is fairly liberal as it removes less than 50% of protein-coding codes. We apply this cutoff on the RPKM scale as it is necessary to consider gene length when applying a cutoff across genes. However, the exact way of doing this is probably not too important.
+We also need to remove genes which are not expressed. The threshold we have been using for GTEx is fairly liberal as it removes less than 50% of protein-coding codes. We apply this cutoff on the log2RPKM scale as it is necessary to consider gene length when applying a cutoff across genes. However, the exact way of doing this is probably not too important.
 
 Finally, following [@Parsana2019] we strongly recommend removing principal components from the data matrix prior to analysis. A fast convenience function for this is `removePrincipalComponents()` from the WGCNA package. How many principal components to remove is an open question. In [@Freytag2015] the authors recommend looking at control genes to assess this, under the hypothesis that random genes should be uncorrelated and we have existing groups of genes which are believe to be highly correlated in all tissues, such as the PRC2 complex [@Freytag2015] or the ribosomal RNA genes [@Boukas2019]. Another approach is to use the `num.sv()` function from the SVA package. In our experience, this yields a substantially higher number of PCs than the graphical methods. Finally, as we shown [@spqnPreprint], the QC plots we present below might also help making this decision. At the end of the day, it is still an open problem.
 
@@ -84,7 +83,8 @@ assays(gtex.0pcs) <- SimpleList(logrpkm = logrpkm.0pcs)
 rowData(gtex.0pcs)$ave_logrpkm <- ave_logrpkm
 
 gtex.4pcs <- gtex.0pcs
-assay(gtex.4pcs) <- removePrincipalComponents(logrpkm.0pcs, n = 4)
+# remove PCs from the gene expression matrix after scaling each gene to have mean=0 and variance=1
+assay(gtex.4pcs) <- removePrincipalComponents(t(scale(t(logrpkm.0pcs))), n = 4)
 ```
 
 
