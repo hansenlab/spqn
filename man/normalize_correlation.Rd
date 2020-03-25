@@ -4,13 +4,13 @@
 \alias{normalize_correlation}
 \title{Spatial Quantile Normalization}
 \usage{
-normalize_correlation(cor_mat, ave_logrpkm, ngrp, size_grp, ref_grp)
+normalize_correlation(cor_mat, ave_exp, ngrp, size_grp, ref_grp)
 }
 \arguments{
 \item{cor_mat}{Matrix, correlation matrix}
 
-\item{ave_logrpkm}{Vector, average expression level for the genes, corresponding to the row/column of cor_mat. 
-                   For other types of data, *ave_logrpkm* can be the vector corresponding to the row/column of 
+\item{ave_exp}{Vector, average expression level for the genes for the normalized expression matrix, corresponding to the row/column of cor_mat. 
+                   For other types of data, *ave_exp* can be the vector corresponding to the row/column of 
                    the correlation matrix, whose dependency with the distribution of correlations need to be removed.}
 
 \item{ngrp}{Integer, number of bins in each row/column to be used to partition the correlation matrix.}
