@@ -5,8 +5,8 @@ get_grp_loc <- function(cor_matrix, ngrp=10){
     return(grp_loc)
 }
 
-get_IQR_condition_exp <- function(cor_mat, ave_logrpkm){
-    cor_mat <- cor_mat[order(ave_logrpkm),order(ave_logrpkm)]
+get_IQR_condition_exp <- function(cor_mat, ave_exp){
+    cor_mat <- cor_mat[order(ave_exp),order(ave_exp)]
     grp_loc <- get_grp_loc(cor_mat)
     IQR_cor_mat= array(dim=c(10,10))
     grp_mean <- c()
@@ -19,7 +19,7 @@ get_IQR_condition_exp <- function(cor_mat, ave_logrpkm){
                 IQR_cor_mat[i,j] <- IQR(cor_tmp)
             }
         }
-        grp_mean <- c(grp_mean, mean(ave_logrpkm[grp_loc[[i]]]))
+        grp_mean <- c(grp_mean, mean(ave_exp[grp_loc[[i]]]))
     }
     IQR_cor_mat[lower.tri(IQR_cor_mat)]= t(IQR_cor_mat)[lower.tri(IQR_cor_mat)]
     return(list(IQR_cor_mat=IQR_cor_mat,
@@ -27,8 +27,8 @@ get_IQR_condition_exp <- function(cor_mat, ave_logrpkm){
 }
 
 
-qqplot_condition_exp <- function(cor_mat, ave_logrpkm, i, j){
-    cor_mat <- cor_mat[order(ave_logrpkm),order(ave_logrpkm)]
+qqplot_condition_exp <- function(cor_mat, ave_exp, i, j){
+    cor_mat <- cor_mat[order(ave_exp),order(ave_exp)]
     group_loc <- get_grp_loc(cor_mat)
     cor_ref <- cor_mat[group_loc[[9]], group_loc[[9]]]
     cor_ref_vec <- cor_ref[upper.tri(cor_ref)]
@@ -44,8 +44,8 @@ qqplot_condition_exp <- function(cor_mat, ave_logrpkm, i, j){
 }
 
 
-plot_signal_condition_exp <- function(cor_mat, ave_logrpkm, percent_sig) { 
-    cor_mat <- cor_mat[order(ave_logrpkm),order(ave_logrpkm)]
+plot_signal_condition_exp <- function(cor_mat, ave_exp, percent_sig) { 
+    cor_mat <- cor_mat[order(ave_exp),order(ave_exp)]
     if(percent_sig==0){
         ngrp=10
         ngene <- ncol(cor_mat)
