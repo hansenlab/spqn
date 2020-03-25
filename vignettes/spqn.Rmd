@@ -97,7 +97,7 @@ We now recreate a number of diagnostic plots which illustrate the mean-correlati
 
 To compare the distribution of correlation across different expression levels, we re-arrrange the correlation matrix by sortng the row and column by the expression level, and partitioned the correlation matrix into same-size bins, then used each bin to estimate the distribution of correlation for genes with that expression level. Here we use 10 by 10 bins. Each bin corresponds to two groups of genes that correspodnd to two expression levels. 
 
-We first looked into the bins on the diagnal, where the two groups of genes have the same expression level. We looked at the distribution of the correlations within each of these bins. We find that the correlations of highly expressed genes are more variant than those of lowly expressed genes. We call such relationship between gene expression level and the distribution of correlation, as mean-correlation relationship.
+We first looked into the bins on the diagnal, where the two groups of genes have the same expression level. We looked at the distribution of the correlations within each of these bins. We find that the correlations of highly expressed genes are more variant than those of lowly expressed genes. We call such relationship between gene expression level and the distribution of correlation as mean-correlation relationship.
 ```{r, message=FALSE, fig.width=4, fig.height=4}
 plot_signal_condition_exp(cor_m, ave_logrpkm, 0)
 ```
