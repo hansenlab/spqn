@@ -7,7 +7,7 @@
 \item{ave_logrpkm}{Vector, average expression level of each gene}
 }
 \value{A matrix containing the IQR of each bin}
-\description{This function allows users to compare the IQR of bins at different location of the correlation matrix.
+\description{This function allows users to compare the IQRs of a set of 10 by 10 same-size bins that partition the correlation matrix.
 }
 \examples{
   if(require(spqnData)) {
