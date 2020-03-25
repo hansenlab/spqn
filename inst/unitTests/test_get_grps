@@ -5,4 +5,4 @@ for(i in 1:10){
 
 grp_loc_assigend = get_grp_loc(cor_mat=array(dim=c(100,100)),ngrp=10)
 
-compare.list(grp_loc_target, grp_loc_assigend)
+all(compare.list(grp_loc_target, grp_loc_assigend))
