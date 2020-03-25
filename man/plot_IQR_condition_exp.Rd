@@ -5,7 +5,8 @@
 \arguments{
 \item{IQR_list}{List, output of get_IQR_condition_exp}
 }
-\description{This function allows users to compare the IQR of correlations conditional on expression matrix.
+\description{This function plots the IQR of correlations conditional on expression matrix, 
+             with IQR denoted by the width of boxes in the plot.
 }
 \value{A plot with boxes that shows the IQR of each expression level}
 \examples{
