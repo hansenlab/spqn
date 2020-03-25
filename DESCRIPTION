@@ -18,7 +18,9 @@ Suggests: BiocStyle,
 	  rmarkdown,
 	  tools,
 	  spqnData,
-	  digest
+	  digest,
+	  RUnit,
+	  hash
 VignetteBuilder: knitr
 URL: https://github.com/hansenlab/spqn
 BugReports: https://github.com/hansenlab/spqn/issues
