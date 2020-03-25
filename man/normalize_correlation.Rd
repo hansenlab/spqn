@@ -9,19 +9,27 @@ normalize_correlation(cor_mat, ave_logrpkm, ngrp, size_grp, ref_grp)
 \arguments{
 \item{cor_mat}{Matrix, correlation matrix}
 
-\item{ave_logrpkm}{Vector, average expression level for the genes, corresponding to the row/column of cor_mat. For other types of data, *ave_logrpkm* can be the vector corresponding to the row/column of the correlation matrix, whose dependency with the distribution of correlations need to be removed.}
+\item{ave_logrpkm}{Vector, average expression level for the genes, corresponding to the row/column of cor_mat. 
+                   For other types of data, *ave_logrpkm* can be the vector corresponding to the row/column of 
+                   the correlation matrix, whose dependency with the distribution of correlations need to be removed.}
 
 \item{ngrp}{Integer, number of bins in each row/column to be used to partition the correlation matrix.}
 
-\item{size_grp}{Integer, size of the outter bins to be used to appriximate the distribution of the inner bins, in order to smooth the normalization. Note that the product of size_grp and ngrp must be equal or larger than than the row/column number of cor_mat, and there is no smoothness in the normalization when they are equal.}
+\item{size_grp}{Integer, size of the outter bins to be used to appriximate the distribution of the inner bins, in 
+                order to smooth the normalization. Note that the product of size_grp and ngrp must be equal or larger 
+                than than the row/column number of cor_mat, and there is no smoothness in the normalization when they 
+                are equal.}
 
-\item{ref_grp}{Integer, location of the reference bin on the diagonal, whose distribution will be used as target distribution in the normalization.}
+\item{ref_grp}{Integer, location of the reference bin on the diagonal, whose distribution will be used as target 
+               distribution in the normalization.}
 }
 \value{
-The normalized correlation matrix, where the distribution of correlations are approximately independent of the expression level.
+The normalized correlation matrix, where the distribution of correlations are approximately independent of the expression 
+level.
 }
 \description{
-The normalize_correlation function allows users to normalize the correlation matrix, such that the distributions of correlations are not dependent of gene expression levels.
+The normalize_correlation function allows users to normalize the correlation matrix, such that the distributions of 
+correlations are approximately the same across different gene expression levels.
 }
 \examples{
 if(require(spqnData)){
