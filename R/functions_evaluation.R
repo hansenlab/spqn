@@ -6,8 +6,8 @@ get_grp_loc <- function(cor_matrix, ngrp=10){
 }
 
 get_IQR_condition_exp <- function(cor_mat, ave_exp){
-    ave_exp <- ave_exp[order(ave_exp)]
     cor_mat <- cor_mat[order(ave_exp),order(ave_exp)]
+    ave_exp <- ave_exp[order(ave_exp)]
     grp_loc <- get_grp_loc(cor_mat)
     IQR_cor_mat= array(dim=c(10,10))
     grp_mean <- c()
