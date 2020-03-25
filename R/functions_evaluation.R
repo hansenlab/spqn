@@ -7,7 +7,6 @@ get_grp_loc <- function(cor_matrix, ngrp=10){
 
 get_IQR_condition_exp <- function(cor_mat, ave_exp){
     cor_mat <- cor_mat[order(ave_exp),order(ave_exp)]
-    ave_exp=round(ave_exp,2)
     grp_loc <- get_grp_loc(cor_mat)
     IQR_cor_mat= array(dim=c(10,10))
     grp_mean <- c()
@@ -126,6 +125,8 @@ plot_IQR_condition_exp <- function(IQR_list){
     y2 <- as.numeric((IQR_cor_mat/2)+sd_grps_offset_y)
     IQR_cor_mat <- round(IQR_cor_mat,3)
     d <- data.frame(x1,x2,y1,y2,sd)
+    grp_mean=round(grp_mean,2)
+
     ggplot() + 
         geom_rect(data=d, mapping=aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2), color="black", alpha=0) +
         xlab("average(log2RPKM)")+ylab("average(log2RPKM)")   +
