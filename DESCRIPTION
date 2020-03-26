@@ -10,7 +10,8 @@ Imports: graphics,
 	 utils,
 	 matrixStats,
 	 WGCNA
-Depends: ggplot2,
+Depends: R (>= 3.5.0),
+	 ggplot2,
          ggridges,
 	 SummarizedExperiment
 Suggests: BiocStyle,
