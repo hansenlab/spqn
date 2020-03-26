@@ -45,7 +45,7 @@
 
 
 ##### Get rank for each running bin
-.get_bin_rank <- function(cor_obs,grp_loc,grp_loc_inner,cor_ref){
+.get_bin_rank <- function(cor_obs, grp_loc, grp_loc_inner, cor_ref){
     rank_bin <- rank_bin_pre <- array(dim=dim(cor_obs))
     ngrp <- length(grp_loc)
     size_bin <- length(grp_loc[[1]])
@@ -77,7 +77,7 @@
 }
 
 ##### Transform rank to cor_est
-.est_cor<-function(rank_bin, cor_ref){
+.est_cor <- function(rank_bin, cor_ref){
     cor_adj <- array(dim=dim(rank_bin))
     cor_ref_sorted <- sort(cor_ref[upper.tri(cor_ref)])
     
@@ -111,9 +111,9 @@
     cor_adj
 }
 
-normalize_correlation <- function(cor_mat, ave_logrpkm, ngrp, size_grp, ref_grp){
-    rownames(cor_mat)=colnames(cor_mat)=seq_len(length(ave_logrpkm))
-    cor_mat=cor_mat[order(ave_logrpkm),order(ave_logrpkm)]
+normalize_correlation <- function(cor_mat, ave_exp, ngrp, size_grp, ref_grp){
+    rownames(cor_mat) <- colnames(cor_mat) <- seq_len(length(ave_exp))
+    cor_mat <- cor_mat[order(ave_exp), order(ave_exp)]
     
     group_loc <- .get_grps(cor_mat, ngrp, size_grp)
     
@@ -127,10 +127,8 @@ normalize_correlation <- function(cor_mat, ave_logrpkm, ngrp, size_grp, ref_grp)
     ## Transform rank to cor_adj
     cor_est <- .est_cor(rank_bin, cor_ref)
     
-    
-    cor_est=cor_est[order(as.numeric(rownames(cor_mat))),
+    cor_est <- cor_est[order(as.numeric(rownames(cor_mat))),
                     order(as.numeric(colnames(cor_mat)))]
-    
     cor_est
 }
 

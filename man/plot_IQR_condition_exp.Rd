@@ -18,7 +18,7 @@ if(require(spqnData)) {
     data(gtex.4k)
     cor_mat <- cor(t(assay(gtex.4k)))
     ave_logrpkm <- rowData(gtex.4k)$ave_logrpkm
-    IQR_list=get_IQR_condition_exp(cor_mat, ave_logrpkm)
+    IQR_list <- get_IQR_condition_exp(cor_mat, ave_exp = ave_logrpkm)
     plot_IQR_condition_exp(IQR_list)
     }
 }

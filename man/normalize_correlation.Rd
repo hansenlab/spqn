@@ -36,5 +36,6 @@ if(require(spqnData)){
   data(gtex.4k)
   cor_ori <- cor(t(assay(gtex.4k)))
   ave_logrpkm <- rowData(gtex.4k)$ave_logrpkm
-  normalize_correlation(cor_ori,ave_logrpkm,ngrp=10,size_grp=15,ref_grp=9)}
+  normalize_correlation(cor_ori, ave_exp = ave_logrpkm,
+                        ngrp=10, size_grp=15, ref_grp=9)}
 }
