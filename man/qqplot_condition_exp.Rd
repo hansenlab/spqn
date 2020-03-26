@@ -8,8 +8,8 @@
 \item{i}{Integer, row number of the tested bin}
 \item{j}{Integer, column number of the tested bin}
 }
-\description{This function allows users to compare the distribution of a bin with the reference bin using qqplot. There are 
-             10 by 10 bins of the same size that partition the correlation matrix. }
+\description{This function allows users to compare the distribution of a bin with the reference bin using qqplot, among the 
+             10 by 10 bins with the same size that partition the correlation matrix. }
 \value{A Q-Q plot that compares the distribution of the tested bin with the reference bin, here is the bin in the 9th row 9th 
        column, in the correlation matrix.}
 \examples{
