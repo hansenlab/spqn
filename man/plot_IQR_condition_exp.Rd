@@ -5,10 +5,10 @@
 \arguments{
 \item{IQR_list}{List, output of get_IQR_condition_exp}
 }
-\description{This function plots the IQR of correlations conditional on expression matrix, 
-             with IQR denoted by the width of boxes in the plot.
-}
-\value{A plot with boxes that shows the IQR of each expression level}
+\description{This function plots the IQR for each bin among a set of 10 by 10 same-size bins that 
+partition the correlation matrix, with IQR denoted by the width of boxes in the plot.
+
+\value{A plot with boxes that shows the IQR of each bin}
 \examples{
 if(require(spqnData)) {
   data(gtex.4k)
