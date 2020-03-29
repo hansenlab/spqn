@@ -98,14 +98,14 @@ We now recreate a number of diagnostic plots which illustrate the mean-correlati
 To compare the distribution of correlation across different expression levels, we re-arrrange the correlation matrix by sortng the row and column by the expression level, and partitioned the correlation matrix into same-size bins, then used each bin to estimate the distribution of correlation for genes with that expression level. Here we use 10 by 10 bins. Each bin corresponds to two groups of genes that correspodnd to two expression levels. 
 
 We first looked into the bins on the diagnal, where the two groups of genes have the same expression level. We looked at the distribution of the correlations within each of these bins. We find that the correlations of highly expressed genes are more variant than those of lowly expressed genes. We call such relationship between gene expression level and the distribution of correlation as mean-correlation relationship.
-```{r, message=FALSE, fig.width=4, fig.height=4}
+```{r, message=FALSE}
 plot_signal_condition_exp(cor_m, ave_logrpkm, 0)
 ```
 
 
 Next, we examine the impact of this mean-correlation relationship on the downstream analysis. 
 A number of studies predict the co-expressed genes by setting a threshold. We therefore examine how the mean-correlation relationship would bias such prediction. We set 0.1% highest correlations as predicted signals in each bin. We compare the distibution of signals for bins on the diagonal. We find that the the predicted signals are stronger for high expressed genes and weaker for low expressed genes. Because of such bias, the true signals among low expressed genes could be hidden and may not be detected. 
-```{r, message = FALSE, fig.width = 4, fig.height = 4}
+```{r, message = FALSE}
 plot_signal_condition_exp(cor_m, ave_logrpkm, 0.1)
 ```
 
@@ -116,7 +116,7 @@ plot_IQR_condition_exp(IQR_list)
 ```
 
 We next plot the marginal relationship between IQR of correlation and the expression level of the lower expression group for each bin, and we also see a positive relationship.
-```{r, message = FALSE, fig.width = 4, fig.height = 4}
+```{r, message = FALSE}
 IQR_unlist <- unlist(lapply(1:10, function(ii) IQR_list$IQR_cor_mat[ii, ii:10]))
 plot(rep(IQR_list$grp_mean, times = 1:10),
      IQR_unlist,
@@ -124,9 +124,9 @@ plot(rep(IQR_list$grp_mean, times = 1:10),
 ```
 
 We further examined the difference of the distributions using Q-Q plot. We used the bins with the second highest expression level on the diagonal as reference, and compared the distribution with other bins in the diagonal. We observe both scale and shape difference in the distributions.
-```{r, message = FALSE, fig.width = 4, fig.height = 4}
+```{r, message = FALSE}
 par(mfrow = c(3,3))
-for(j in 1:10){
+for(j in c(1:8,10)){
     qqplot_condition_exp(cor_m, ave_logrpkm, j, j)
 }
 ```
@@ -135,7 +135,7 @@ for(j in 1:10){
 To remove the mean-correlation relationship and avoid the bias in the co-expression analysis, we develop a normalization method for correlation matrix, named as spatial quantile normalization (SpQN). The main idea is to use bins to partition the correlation matrix with genes sorted by exp level, and then apply quantile normalization for each bin. To smooth the normalization, we used a larger bin to approximate the empirical distribution of the inner bin. And we applied 1-dimension quantile normalization on the inner bins using its approximated distribution. The target distribution we used here is the bin with the second highest expression level on the diagonal. 
 
 Using SpQN is relatively easy. In the function *normalize_correlation*, imput matrix *cor_m* is the correlation matrix. Imput vector *ave_exp* is the average expression level for the genes for the normalized expression matrix, corresponding to the row/column of *cor_m*. For other types of data, *ave_exp* can be the vector corresponding to the row/column of the correlation matrix, whose dependency with the distribution of correlations need to be removed. Parameter *ngrp* is an integer, denoting the number of bins in each row/column to be used to partition the correlation matrix in the process of SpQN. For example, setting *ngrp*=20 means to partition the correlation matrix into 20 by 20 bins. Parameter *size_grp* is an integer, denoting the size of the outter bins to be used to appriximate the distribution of the inner bins, in order to smooth the normalization. Note that the product of *size_grp* and *ngrp* must be equal or larger than than the row/column number of *cor_m*, and there is no smoothness in the normalization when they are equal. Parameter *ref_grp* is the location of the reference bin on the diagonal, whose distribution will be used as target distribution in the normalization.
-```{r spqn, message = FALSE, fig.width = 4, fig.height = 4}
+```{r spqn, message = FALSE}
 cor_m_spqn <- normalize_correlation(cor_m, ave_exp=ave_logrpkm, ngrp=20, size_grp=300, ref_grp=18)
 ```
 
@@ -144,12 +144,12 @@ cor_m_spqn <- normalize_correlation(cor_m, ave_exp=ave_logrpkm, ngrp=20, size_gr
 To evaluate the performance of SpQN, we make the same plots as before, but using the normalized correlation matrix.
 
 Compare distributions of correlations for bins on the diagonal of the correlation matrix.
-```{r, message = FALSE, fig.width = 4, fig.height = 4}
+```{r, message = FALSE}
 plot_signal_condition_exp(cor_m_spqn, ave_logrpkm, 0)
 ```
 
 Distribution of predicted signals and background correlations for bins on the diagonal of the correlation matrix.
-```{r, message = FALSE, fig.width = 4, fig.height = 4}
+```{r, message = FALSE}
 plot_signal_condition_exp(cor_m_spqn, ave_logrpkm, 0.1)
 ```
 
@@ -160,15 +160,15 @@ plot_IQR_condition_exp(IQR_spqn_list)
 ```
 
 Q-Q plot to compare the distribution for the bin with the 2nd highest expression level on the diagonal with other bins on the diagonal.
-```{r, message = FALSE, fig.width = 4, fig.height = 4}
+```{r, message = FALSE}
 par(mfrow = c(3,3))
-for(j in 1:10){
+for(j in c(1:8,10)){
     qqplot_condition_exp(cor_m_spqn, ave_logrpkm, j, j)
 }
 ```
 
 Marginal relationship between IQR and the expression level of the lower expressed group for each bin.
-```{r, message = FALSE, fig.width = 4, fig.height = 4}
+```{r, message = FALSE}
 IQR_unlist <- unlist(lapply(1:10, function(ii) IQR_spqn_list$IQR_cor_mat[ii, ii:10]))
 plot(rep(IQR_spqn_list$grp_mean, times = 1:10),
      IQR_unlist,
