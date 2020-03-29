@@ -45,10 +45,10 @@ qqplot_condition_exp <- function(cor_mat, ave_exp, i, j){
 }
 
 
-plot_signal_condition_exp <- function(cor_mat, ave_exp, percent_sig) { 
+plot_signal_condition_exp <- function(cor_mat, ave_exp, signal) { 
     cor_mat <- cor_mat[order(ave_exp),order(ave_exp)]
-    if(percent_sig==0){
-        ngrp=10
+    if(all.equal(signal, 0)){
+        ngrp <- 10
         ngene <- ncol(cor_mat)
         grp_label <- cut(seq_len(ngene), ngrp)
         grp_loc <- split(seq_len(ngene), grp_label) 
@@ -71,7 +71,7 @@ plot_signal_condition_exp <- function(cor_mat, ave_exp, percent_sig) {
             geom_vline(xintercept = 0, linetype="dotted", color = "black", size=0.3)
     } else {
         ncor <- length(which(upper.tri(cor_mat)))
-        nsignal <- ncor*percent_sig/100
+        nsignal <- ncor*signal
         nsignal_grp <- nsignal/100
         list_cor_sig <- list_cor_back <- grp_back <- grp_sig <- c()
         grp_locs <- get_grp_loc(cor_mat)

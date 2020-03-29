@@ -37,12 +37,11 @@ library(SummarizedExperiment)
 ```
 
 This dataset contains 4,000 genes from the GTEx tissue "Adipose Subcutaneous" which we use as exemplar tissue in our preprint [@spqnPreprint]. The data is from GTEx v6p. The genes have been restricted to a random sample of 4,000 genes from genes which are
-- Either protein-coding or lincRNAs
-- Expressed (median expression greater than 0 on the $\log_2(\text{RPKM})$ scale
+
+- either protein-coding or lincRNAs
+- expressed (median expression greater than 0 on the $\log_2(\text{RPKM})$ scale
 
 The data is counts (from the GTEx website) of bulk RNA-seq data which has been transformed to the expression matrix in the $\log_2(\text{RPKM})$ scale. Each gene has been scaled to have mean 0 and variance 1, and 4 principal components have been removed from the data matrix. For SpQN we need access to the gene expression level, which we take as the mean or median expression level across samples. So this quantity needs to be computed (and stored) prior to removing principal components. For this example data, we have stored the average expression value on the log-RPKM scale in `rowData(gtex.4k)$ave_logrpkm`.
-
-
 
 To compare the distribution of correlation across different expression levels, we get the correlation matrix and average gene expression level ($\log_2(\text{RPKM})$) for each gene.
  ```{r cor_m, message=FALSE}
@@ -82,6 +81,8 @@ wh.expressed  <- which(rowMedians(logrpkm) > 0)
 gtex.0pcs <- gtex[wh.expressed,]
 logrpkm.0pcs <- logrpkm[wh.expressed,]
 ave_logrpkm <- rowMeans(logrpkm.0pcs)
+logrpkm <- logrpkm - ave_logrpkm # mean centering
+logrpkm  <- logrpkm / matrixStats::rowSds(logrpkm) # variance scaling
 assays(gtex.0pcs) <- SimpleList(logrpkm = logrpkm.0pcs)
 rowData(gtex.0pcs)$ave_logrpkm <- ave_logrpkm
 
@@ -99,14 +100,14 @@ To compare the distribution of correlation across different expression levels, w
 
 We first looked into the bins on the diagnal, where the two groups of genes have the same expression level. We looked at the distribution of the correlations within each of these bins. We find that the correlations of highly expressed genes are more variant than those of lowly expressed genes. We call such relationship between gene expression level and the distribution of correlation as mean-correlation relationship.
 ```{r, message=FALSE}
-plot_signal_condition_exp(cor_m, ave_logrpkm, 0)
+plot_signal_condition_exp(cor_m, ave_logrpkm, signal=0)
 ```
 
 
 Next, we examine the impact of this mean-correlation relationship on the downstream analysis. 
 A number of studies predict the co-expressed genes by setting a threshold. We therefore examine how the mean-correlation relationship would bias such prediction. We set 0.1% highest correlations as predicted signals in each bin. We compare the distibution of signals for bins on the diagonal. We find that the the predicted signals are stronger for high expressed genes and weaker for low expressed genes. Because of such bias, the true signals among low expressed genes could be hidden and may not be detected. 
 ```{r, message = FALSE}
-plot_signal_condition_exp(cor_m, ave_logrpkm, 0.1)
+plot_signal_condition_exp(cor_m, ave_logrpkm, signal=0.001)
 ```
 
 Next we looked further into the bins across the entire correlation matrix. We quantify the variance inside a bin using inter-quantile range (IQR), which is the distance from the 1st and 3rd quantile. We use the width of box in the plot to denote IQR. We observe that the IQR would increase with the increase of expression level for either gene.
@@ -145,12 +146,12 @@ To evaluate the performance of SpQN, we make the same plots as before, but using
 
 Compare distributions of correlations for bins on the diagonal of the correlation matrix.
 ```{r, message = FALSE}
-plot_signal_condition_exp(cor_m_spqn, ave_logrpkm, 0)
+plot_signal_condition_exp(cor_m_spqn, ave_logrpkm, signal=0)
 ```
 
 Distribution of predicted signals and background correlations for bins on the diagonal of the correlation matrix.
 ```{r, message = FALSE}
-plot_signal_condition_exp(cor_m_spqn, ave_logrpkm, 0.1)
+plot_signal_condition_exp(cor_m_spqn, ave_logrpkm, signal=0.001)
 ```
 
 Compare IQRs of bins across the entire correlation matrix.
