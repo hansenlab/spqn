@@ -1,7 +1,10 @@
 Package: spqn
 Title: Spatial quantile normalization
-Version: 0.0.1
-Description: The spqn package contains the function to normalize the local distribution in a matrix. Specifically, the spqn package contains the function to approximate the local distribution and trasformed them to the target distribution. spqn approximated the local distribution by binnning the matrix into disjoint bins, and using empirical distribution of larger bins to approximate the distribution of disjoint bins. The quantile normalization was used to map the disjoint bins to target bin. After normalization, the local distribution are approximately the same.
+Version: 0.1.0
+Description: The spqn package implements spatial quantile normalization (SpQN). This method was
+	     developed to remove a mean-correlation relationship in correlation matrices built from
+	     gene expression data. It can serve as pre-processing step prior to a co-expression
+	     analysis.
 Authors@R: c(person("Yi", "Wang", role = c("cre", "aut"), email = "yiwangthu4@gmail.com"),
 	     person(c("Kasper", "Daniel"), "Hansen", role = "aut"))
 License: Artistic-2.0
