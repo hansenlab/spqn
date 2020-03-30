@@ -47,7 +47,7 @@ qqplot_condition_exp <- function(cor_mat, ave_exp, i, j){
 
 plot_signal_condition_exp <- function(cor_mat, ave_exp, signal) { 
     cor_mat <- cor_mat[order(ave_exp),order(ave_exp)]
-    if(all.equal(signal, 0)){
+    if(isTRUE(all.equal(signal, 0))){
         ngrp <- 10
         ngene <- ncol(cor_mat)
         grp_label <- cut(seq_len(ngene), ngrp)
