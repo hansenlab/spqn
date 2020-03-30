@@ -13,7 +13,7 @@ Imports: graphics,
 	 utils,
 	 matrixStats,
 	 WGCNA
-Depends: R (>= 3.6.3),
+Depends: R (>= 4.0.0),
 	 ggplot2,
          ggridges,
 	 SummarizedExperiment
