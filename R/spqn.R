@@ -38,7 +38,9 @@
     
     for(i in 2:(ngrp-1)){
         width_tmp <- grp_loc[[i+1]][1] - grp_loc[[i]][1]
-        grp_loc_inner[[i]] <- c( (tail(grp_loc_inner[[i-1]],1)+1) :(tail(grp_loc_inner[[i-1]],1) + width_tmp))
+        # grp_loc_inner[[i]] <- c( (tail(grp_loc_inner[[i-1]],1)+1) :(tail(grp_loc_inner[[i-1]],1) + width_tmp))
+        tail <- tail(grp_loc_inner[[i-1]], 1)
+        grp_loc_inner[[i]] <- (tail + 1):(tail + width_tmp)
     }
     
     grp_loc_inner[[ngrp]] <- c( (tail(grp_loc_inner[[ngrp-1]],1)+1) : ngene)
