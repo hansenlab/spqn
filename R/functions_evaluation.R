@@ -92,7 +92,7 @@ plot_signal_condition_exp <- function(cor_mat, ave_exp, signal) {
         df_merge <- rbind(df_sig,df_back)
         ggplot( df_merge,aes(y = "bin")) +
             geom_density_ridges(
-                aes(x = "correlation", fill = paste("bin", "group")),
+                aes_string(x = "correlation", fill = paste("bin", "group")),
                 alpha = .8, color = "white") +
             labs(x = "correlation",
                 y = "bin" )  +
