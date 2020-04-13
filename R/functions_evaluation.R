@@ -90,13 +90,15 @@ plot_signal_condition_exp <- function(cor_mat, ave_exp, signal) {
         df_sig <- data.frame(correlation=list_cor_sig, bin=grp_sig, group="signal")
         df_back <- data.frame(correlation=list_cor_back, bin=grp_back, group="background")
         df_merge <- rbind(df_sig,df_back)
-        ggplot( df_merge,aes(y = "bin")) +
+        ggplot( df_merge,aes(y = bin)) +
             geom_density_ridges(
-                aes_string(x = "correlation", fill = paste("bin", "group")),
+                aes(x = correlation, fill = paste(bin, group)),
+                #aes_string(x = "correlation", fill = paste("bin", "group")),
+
                 alpha = .8, color = "white") +
             labs(x = "correlation",
                 y = "bin" )  +
-            scale_y_discrete(limits=c(seq_len(10))) +
+            scale_y_discrete(limits=c(1:10)) +
             scale_fill_cyclical(
                 labels = c("background","signal"),
                 values = c("#0000ff", "#ff0000"),
