@@ -65,7 +65,7 @@ plot_signal_condition_exp <- function(cor_mat, ave_exp, signal) {
         cor_vec_all <- data.frame(cor_vec_all)
         names(cor_vec_all) <- c("correlation","group")
         cor_vec_all$group <- as.factor(cor_vec_all$group)
-        ggplot(cor_vec_all, aes_string(x = `correlation`, y = `group`)) +
+        ggplot(cor_vec_all, aes(x = `correlation`, y = `group`)) +
             geom_density_ridges2(fill="blue") +
             theme_ridges( grid = TRUE) + theme(axis.title.x = element_blank()) + 
             geom_vline(xintercept = 0, linetype="dotted", color = "black", size=0.3)
@@ -90,9 +90,9 @@ plot_signal_condition_exp <- function(cor_mat, ave_exp, signal) {
         df_sig <- data.frame(correlation=list_cor_sig, bin=grp_sig, group="signal")
         df_back <- data.frame(correlation=list_cor_back, bin=grp_back, group="background")
         df_merge <- rbind(df_sig,df_back)
-        ggplot( df_merge,aes_string(y = "bin")) +
+        ggplot( df_merge,aes(y = "bin")) +
             geom_density_ridges(
-                aes_string(x = "correlation", fill = paste("bin", "group")),
+                aes(x = "correlation", fill = paste("bin", "group")),
                 alpha = .8, color = "white") +
             labs(x = "correlation",
                 y = "bin" )  +
