@@ -44,7 +44,7 @@ This dataset contains 4,000 genes from the GTEx tissue "Adipose Subcutaneous" wh
 The data is counts (from the GTEx website) of bulk RNA-seq data which has been transformed to the expression matrix in the $\log_2(\text{RPKM})$ scale. Each gene has been scaled to have mean 0 and variance 1, and 4 principal components have been removed from the data matrix. For SpQN we need access to the gene expression level, which we take as the mean or median expression level across samples. So this quantity needs to be computed (and stored) prior to removing principal components. For this example data, we have stored the average expression value on the log-RPKM scale in `rowData(gtex.4k)$ave_logrpkm`.
 
 To compare the distribution of correlation across different expression levels, we get the correlation matrix and average gene expression level ($\log_2(\text{RPKM})$) for each gene.
- ```{r cor_m, message=FALSE}
+```{r cor_m, message=FALSE}
 data(gtex.4k)
 cor_m <- cor(t(assay(gtex.4k)))
 ave_logrpkm <- rowData(gtex.4k)$ave_logrpkm
