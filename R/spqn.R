@@ -102,13 +102,6 @@
     ## Estimate the correlation using weighted average based on the distance to rank_bin
     rank_bin2[which(rank_bin2>length(cor_ref_sorted))] <- length(cor_ref_sorted)
     cor_adj[up_tri] <- rank_bin_w1*cor_ref_sorted[rank_bin1]+ rank_bin_w2*cor_ref_sorted[rank_bin2]
-    
-    remove(rank_bin1)
-    remove(rank_bin2)
-    remove(rank_bin_w1)
-    remove(rank_bin_w2)
-    remove(up_tri)
-    remove(rank_bin)
 
     low_tri <- lower.tri(cor_adj)
     cor_adj[low_tri] <- t(cor_adj)[low_tri]
