@@ -6,8 +6,8 @@
 
     if(size_grp-length(grp_loc0[[1]])<5){
         grp_label <- cut(seq_len(ngene), ngrp)
-        grp_loc0 <- split(seq_len(ngene), grp_label)
-        grp_loc = grp_loc0
+        grp_loc <- split(seq_len(ngene), grp_label)
+        # grp_loc0 <- split(seq_len(ngene), grp_label)
         # for(i in seq_len(ngrp)){
             # grp_loc[[i]] <- grp_loc0[[i]]
             # e.g. idx <- seq_len(ngrp)
