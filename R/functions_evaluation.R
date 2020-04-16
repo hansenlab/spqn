@@ -63,9 +63,9 @@ plot_signal_condition_exp <- function(cor_mat, ave_exp, signal) {
             }
         }
         cor_vec_all <- data.frame(cor_vec_all)
-        names(cor_vec_all) <- c("correlation","group")
+        names(cor_vec_all) <- c("correlation", "group")
         cor_vec_all$group <- as.factor(cor_vec_all$group)
-        ggplot(cor_vec_all, aes(x = `correlation`, y = `group`)) +
+        ggplot(cor_vec_all, aes_string(x = "correlation", y = "group")) +
             geom_density_ridges2(fill="blue") +
             theme_ridges( grid = TRUE) + theme(axis.title.x = element_blank()) + 
             geom_vline(xintercept = 0, linetype="dotted", color = "black", size=0.3)
@@ -90,14 +90,12 @@ plot_signal_condition_exp <- function(cor_mat, ave_exp, signal) {
         df_sig <- data.frame(correlation=list_cor_sig, bin=grp_sig, group="signal")
         df_back <- data.frame(correlation=list_cor_back, bin=grp_back, group="background")
         df_merge <- rbind(df_sig,df_back)
-        ggplot( df_merge,aes(y = bin)) +
+        df_merge$bin_group  <-  paste(df_merge$bin, df_merge$group)
+        ggplot(df_merge, aes_string(y = "bin")) +
             geom_density_ridges(
-                aes(x = correlation, fill = paste(bin, group)),
-                #aes_string(x = "correlation", fill = paste("bin", "group")),
-
+                aes_string(x = "correlation", fill = "bin_group"),
                 alpha = .8, color = "white") +
-            labs(x = "correlation",
-                y = "bin" )  +
+            labs(x = "correlation", y = "bin")  +
             scale_y_discrete(limits=c(1:10)) +
             scale_fill_cyclical(
                 labels = c("background","signal"),
