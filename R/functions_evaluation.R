@@ -51,6 +51,7 @@ qqplot_condition_exp <- function(cor_mat, ave_exp, i, j){
 }
 
 
+
 plot_signal_condition_exp <- function(cor_mat, ave_exp, signal) { 
   idx <- order(ave_exp)
   cor_mat <- cor_mat[idx, idx]
@@ -62,6 +63,7 @@ plot_signal_condition_exp <- function(cor_mat, ave_exp, signal) {
     grp_loc <- split(idx, grp_label) 
     
     length_group <- lapply(grp_loc, length)
+    length_group <- unlist(length_group)
     length_group <- length_group*(length_group-1)/2
     length_group_cumulate <- cumsum(length_group)
     
@@ -147,6 +149,7 @@ plot_signal_condition_exp <- function(cor_mat, ave_exp, signal) {
       theme_ridges(grid = FALSE)
   }
 }
+
 
 
 plot_IQR_condition_exp <- function(IQR_list){
