@@ -151,37 +151,35 @@ plot_signal_condition_exp <- function(cor_mat, ave_exp, signal) {
 }
 
 
-
 plot_IQR_condition_exp <- function(IQR_list){
-    IQR_cor_mat <- IQR_list$IQR_cor_mat
-    grp_mean <- IQR_list$grp_mean
-    IQR_cor_mat2 <- round(IQR_cor_mat, 3)
-    IQR_cor_mat <- IQR_cor_mat/max(IQR_cor_mat)
-    max_IQR <- max(IQR_cor_mat)
-    margin <- min(IQR_cor_mat)/10
-    sd_grps_offset_y <- t(matrix(rep(max_IQR,100), nrow=10))
-    for(i in 2:10){
-        sd_grps_offset_y[i,] <- max_IQR + sd_grps_offset_y[i-1,] + margin
-    }
-    # sd_grps_offset_x=t(matrix(rep(max_sd,100),nrow=10))
-    #for(i in 2:10){
-    #    sd_grps_offset_x[,i]=t(rep(max_sd,10)+sd_grps_offset_y[i-1,])+min(IQR_cor_mat)/10
-    #}
-    sd_grps_offset_x <- sd_grps_offset_y
-    sd <- as.numeric(IQR_cor_mat)
-    x1 <- as.numeric((-IQR_cor_mat/2)+sd_grps_offset_x)
-    x2 <- as.numeric((IQR_cor_mat/2)+sd_grps_offset_x)
-    y1 <- x1
-    y2 <- x2
-    IQR_cor_mat <- round(IQR_cor_mat,3)
-    d <- data.frame(x1,x2,y1,y2,sd)
-
-    ggplot() + 
-        geom_rect(data=d, mapping=aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2), color="black", alpha=0) +
-        xlab("average(log2RPKM)")+ylab("average(log2RPKM)")   +
-        scale_y_discrete(limits=c(seq_len(10))+c(0:9)*min(IQR_cor_mat)/10,
-                         labels=round(grp_mean,1))+
-        scale_x_discrete(limits=c(seq_len(10))+c(0:9)*min(IQR_cor_mat)/10,
-                         labels=round(grp_mean,1)) + theme_bw()+
-        theme(axis.title.x = element_text(size=20),axis.title.y = element_text(size=20),axis.text=element_text(size=20))
+  IQR_cor_mat <- IQR_list$IQR_cor_mat
+  grp_mean <- IQR_list$grp_mean
+  IQR_cor_mat2 <- round(IQR_cor_mat, 3)
+  IQR_cor_mat <- IQR_cor_mat/max(IQR_cor_mat)
+  max_IQR <- max(IQR_cor_mat)
+  margin <- min(IQR_cor_mat)/10
+  sd_grps_offset_y <- t(matrix(rep(max_IQR,100), nrow=10))
+  for(i in 2:10){
+    sd_grps_offset_y[i,] <- max_IQR + sd_grps_offset_y[i-1,] + margin
+  }
+  sd_grps_offset_x=t(matrix(rep(max_IQR,100),nrow=10))
+  for(i in 2:10){
+    sd_grps_offset_x[,i]=max_IQR+sd_grps_offset_y[i-1,]+margin
+  }
+  sd <- as.numeric(IQR_cor_mat)
+  x1 <- as.numeric((-IQR_cor_mat/2)+sd_grps_offset_x)
+  x2 <- as.numeric((IQR_cor_mat/2)+sd_grps_offset_x)
+  y1 <- as.numeric((-IQR_cor_mat/2)+sd_grps_offset_y)
+  y2 <- as.numeric((IQR_cor_mat/2)+sd_grps_offset_y)
+  IQR_cor_mat <- round(IQR_cor_mat,3)
+  d <- data.frame(x1,x2,y1,y2,sd)
+  
+  ggplot() + 
+    geom_rect(data=d, mapping=aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2), color="black", alpha=0) +
+    xlab("average(log2RPKM)")+ylab("average(log2RPKM)")   +
+    scale_y_discrete(limits=c(seq_len(10))+c(0:9)*min(IQR_cor_mat)/10,
+                     labels=round(grp_mean,1))+
+    scale_x_discrete(limits=c(seq_len(10))+c(0:9)*min(IQR_cor_mat)/10,
+                     labels=round(grp_mean,1)) + theme_bw()+
+    theme(axis.title.x = element_text(size=20),axis.title.y = element_text(size=20),axis.text=element_text(size=20))
 }
