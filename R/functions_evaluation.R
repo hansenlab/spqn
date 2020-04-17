@@ -167,6 +167,7 @@ plot_IQR_condition_exp <- function(IQR_list){
     #for(i in 2:10){
     #    sd_grps_offset_x[,i]=t(rep(max_sd,10)+sd_grps_offset_y[i-1,])+min(IQR_cor_mat)/10
     #}
+    sd_grps_offset_x <- sd_grps_offset_y
     sd <- as.numeric(IQR_cor_mat)
     x1 <- as.numeric((-IQR_cor_mat/2)+sd_grps_offset_x)
     x2 <- as.numeric((IQR_cor_mat/2)+sd_grps_offset_x)
