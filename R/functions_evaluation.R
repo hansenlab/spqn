@@ -141,7 +141,7 @@ plot_signal_condition_exp <- function(cor_mat, ave_exp, signal) {
         aes_string(x = "correlation", fill = "bin_group"),
         alpha = .8, color = "white") +
       labs(x = "correlation", y = "bin")  +
-      scale_y_discrete(limits=c(1:10)) +
+      scale_y_discrete(limits=seq_len(10)) +
       scale_fill_cyclical(
         labels = c("background","signal"),
         values = c("#0000ff", "#ff0000"),
