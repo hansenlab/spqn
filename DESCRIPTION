@@ -22,7 +22,6 @@ Suggests: BiocStyle,
 	  tools,
 	  BiocGenerics,
 	  spqnData,
-	  digest,
 	  RUnit
 VignetteBuilder: knitr
 URL: https://github.com/hansenlab/spqn
