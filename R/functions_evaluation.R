@@ -6,8 +6,9 @@ get_grp_loc <- function(cor_matrix, ngrp=10){
 }
 
 get_IQR_condition_exp <- function(cor_mat, ave_exp){
-    cor_mat <- cor_mat[order(ave_exp),order(ave_exp)]
-    ave_exp <- ave_exp[order(ave_exp)]
+    idx <- order(ave_exp)
+    cor_mat <- cor_mat[idx, idx]
+    ave_exp <- ave_exp[idx]
     grp_loc <- get_grp_loc(cor_mat)
     IQR_cor_mat= array(dim=c(10,10))
     grp_mean <- array(dim=10)
@@ -29,7 +30,8 @@ get_IQR_condition_exp <- function(cor_mat, ave_exp){
 
 
 qqplot_condition_exp <- function(cor_mat, ave_exp, i, j){
-    cor_mat <- cor_mat[order(ave_exp),order(ave_exp)]
+    idx <- order(ave_exp)
+    cor_mat <- cor_mat[idx, idx]
     group_loc <- get_grp_loc(cor_mat)
     cor_ref <- cor_mat[group_loc[[9]], group_loc[[9]]]
     cor_ref_vec <- cor_ref[upper.tri(cor_ref)]
@@ -46,12 +48,14 @@ qqplot_condition_exp <- function(cor_mat, ave_exp, i, j){
 
 
 plot_signal_condition_exp <- function(cor_mat, ave_exp, signal) { 
-    cor_mat <- cor_mat[order(ave_exp),order(ave_exp)]
+    idx <- order(ave_exp)
+    cor_mat <- cor_mat[idx, idx]
     if(isTRUE(all.equal(signal, 0))){
         ngrp <- 10
         ngene <- ncol(cor_mat)
-        grp_label <- cut(seq_len(ngene), ngrp)
-        grp_loc <- split(seq_len(ngene), grp_label) 
+        idx <- seq_len(ngene)
+        grp_label <- cut(idx, ngrp)
+        grp_loc <- split(idx, grp_label) 
         for(i in seq_len(10)) {
             cor_tmp <- cor_mat[grp_loc[[i]], grp_loc[[i]]]
             cor_tmp <- cor_tmp[upper.tri(cor_tmp)]
