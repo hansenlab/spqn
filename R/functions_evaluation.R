@@ -50,8 +50,6 @@ qqplot_condition_exp <- function(cor_mat, ave_exp, i, j){
     abline(0, 1, col="blue")
 }
 
-
-
 plot_signal_condition_exp <- function(cor_mat, ave_exp, signal) { 
   idx <- order(ave_exp)
   cor_mat <- cor_mat[idx, idx]
