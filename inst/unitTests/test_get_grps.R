@@ -3,8 +3,8 @@ test_get_grps <- function(){
   load(file.path(path.package("spqn"), "useful", "grp_loc_target.rda"))
 
   grp_loc_assigend = get_grp_loc(cor_mat=array(dim=c(100,100)),ngrp=10)
-
-  all(compare.list(grp_loc_target, grp_loc_assigend))
+  grp_loc_assigend =  matrix(unlist(grp_loc_assigend), ncol = 10, byrow = TRUE)
+    
+  checkEquals(grp_loc_target, grp_loc_assigend)
 }
-
 
