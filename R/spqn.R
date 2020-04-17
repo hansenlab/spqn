@@ -1,9 +1,8 @@
 .get_grps <- function(cor_mat, ngrp=20, size_grp=400){
     ngene <- nrow(cor_mat)
-    #idx <- seq_len(ngene-size_grp+1)
-    #grp_label <- cut(idx, ngrp-1)
-    #grp_loc0 <- split(idx, grp_label)
-    #grp_loc <- list()
+    idx <- seq_len(ngene-size_grp+1)
+    grp_label <- cut(idx, ngrp-1)
+    grp_loc0 <- split(idx, grp_label)
     
     if(size_grp-length(grp_loc0[[1]])<5){
         idx <- seq_len(ngene)
