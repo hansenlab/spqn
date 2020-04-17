@@ -1,7 +1,8 @@
 get_grp_loc <- function(cor_matrix, ngrp=10){
     ngene <- nrow(cor_matrix)
-    grp_label <- cut(seq_len(ngene), ngrp)
-    grp_loc <- split(seq_len(ngene), grp_label)
+    idx <- seq_len(ngene)
+    grp_label <- cut(idx, ngrp)
+    grp_loc <- split(idx, grp_label)
     return(grp_loc)
 }
 
@@ -14,17 +15,19 @@ get_IQR_condition_exp <- function(cor_mat, ave_exp){
     grp_mean <- array(dim=10)
     for(i in seq_len(10)) {
         cor_tmp <- cor_mat[grp_loc[[i]],grp_loc[[i]]]
-        IQR_cor_mat[i,i] <- IQR(cor_tmp[upper.tri(cor_tmp)])
+        cor_tmp_up_tri <- cor_tmp[upper.tri(cor_tmp)]
+        IQR_cor_mat[i,i] <- IQR(cor_tmp_up_tri)
         if(i < 10){ 
             for(j in (i+1):10) {
                 cor_tmp <- cor_mat[grp_loc[[i]],grp_loc[[j]]]
                 IQR_cor_mat[i,j] <- IQR(cor_tmp)
             }
         }
-        grp_mean[i] <-  mean(ave_exp[grp_loc[[i]]])
+        ave_exp_grp <- ave_exp[grp_loc[[i]]]
+        grp_mean[i] <-  mean(ave_exp_grp)
     }
     idx <- lower.tri(IQR_cor_mat)
-    IQR_cor_mat[idx]<- t(IQR_cor_mat)[idx]
+    IQR_cor_mat[idx] <- t(IQR_cor_mat)[idx]
     return(list(IQR_cor_mat=IQR_cor_mat,
                 grp_mean=grp_mean))
 }
@@ -57,15 +60,28 @@ plot_signal_condition_exp <- function(cor_mat, ave_exp, signal) {
         idx <- seq_len(ngene)
         grp_label <- cut(idx, ngrp)
         grp_loc <- split(idx, grp_label) 
+        
+        length_group <- lapply(grp_loc, length)
+        length_group <- length_group*(length_group-1)/2
+        length_group_cumulate <- cumsum(length_group)
+
+        cor_vec_all <- data.frame(matrix(ncol = 2, nrow = length_group_cumulate[10]))
+        colnames(cor_vec_all) <- c("correlation",  "group")
+                
         for(i in seq_len(10)) {
             cor_tmp <- cor_mat[grp_loc[[i]], grp_loc[[i]]]
             cor_tmp <- cor_tmp[upper.tri(cor_tmp)]
-            if(i==1) {
-                cor_vec_all <- cbind(as.numeric(cor_tmp), rep(i,length(as.numeric(cor_tmp))))
-                names(cor_vec_all) <- c("correlation","group")
+            cor_tmp <- as.numeric(cor_tmp)
+            if(i==1){
+                idx1 <- 1
             }else{
-                cor_vec_all <- rbind(cor_vec_all, cbind(as.numeric(cor_tmp), rep(i,length(as.numeric(cor_tmp)))))
+                idx1 <- length_group_cumulate[i-1]+1
             }
+            idx2 <- length_group_cumulate[i]
+            idx <- c(idx1 : idx2)
+            cor_vec_all$correlation[idx] <- cor_tmp
+            length_tmp <- length_group[i]
+            cor_vec_all$group[idx] <- rep(i,length_tmp)
         }
         cor_vec_all <- data.frame(cor_vec_all)
         names(cor_vec_all) <- c("correlation", "group")
@@ -82,25 +98,35 @@ plot_signal_condition_exp <- function(cor_mat, ave_exp, signal) {
         # list_cor_sig <- list_cor_back <- grp_back <- grp_sig <- c()
         grp_locs <- get_grp_loc(cor_mat)
         list_cor_sig <- grp_sig <- numeric(10*nsignal_grp)
-        nbackground_group <- lapply(grp_locs, function(ii){length(ii)*(length(ii)-1)/2})
+        nbackground_group <- lapply(grp_locs, length)
+        nbackground_group <- nbackground_group*(nbackground_group-1)/2
         list_cor_back <- grp_back <- numeric(sum(nbackground_group))
-        list_cor_back_cumulate <- apply(as.matrix(1:10),1,function(ii){sum(nbackground_group[1:ii])})
+        list_cor_back_cumulate <- cumsum(list_cor_back)
         for(ngrp in seq_len(10)) {
             loc_back <- grp_locs[[ngrp]]
             cor_back <- cor_mat[loc_back,loc_back]
             cor_back <- cor_back[upper.tri(cor_back)]
             order_cor_ori_grp <- order(abs(cor_back), decreasing=TRUE)
-            cor_signal_ori <- cor_back[order_cor_ori_grp[seq_len(nsignal_grp)]]
-    
-            list_cor_sig[((i-1)*nsignal_grp+1) : i*nsignal_grp] <- cor_signal_ori
-            grp_sig[((i-1)*nsignal_grp+1):i*nsignal_grp] <- rep(ngrp, length(cor_signal_ori)
+            idx <- seq_len(nsignal_grp)
+            id_signal <- order_cor_ori_grp[idx]
+            cor_signal_ori <- cor_back[id_signal]
+            
+            idx1 <- (i-1)*nsignal_grp+1
+            idx2 <- i*nsignal_grp
+            idx <- c(idx1 : idx2)
+            list_cor_sig[idx] <- cor_signal_ori
+            grp_sig[idx] <- rep(ngrp, length(cor_signal_ori)
 
             if(i==1){
-                list_cor_back[1, list_cor_back_cumulate[i]] <- cor_back
-                grp_back[1, list_cor_back_cumulate[i]] <- rep(ngrp, length(cor_back))
+                idx <- seq_len(list_cor_back_cumulate[i])
+                list_cor_back[idx] <- cor_back
+                grp_back[idx] <- rep(ngrp, length(cor_back))
             }else{
-                list_cor_back[list_cor_back_cumulate[i-1]+1, list_cor_back_cumulate[i]] <- cor_back
-                grp_back[list_cor_back_cumulate[i-1]+1, list_cor_back_cumulate[i]] <- rep(ngrp, nbackground_group[i])
+                idx1 <- list_cor_back_cumulate[i-1]+1)
+                idx2 <- list_cor_back_cumulate[i]
+                idx <- c(idx1:idx2)
+                list_cor_back[idx] <- cor_back
+                grp_back[idx] <- rep(ngrp, nbackground_group[i])
             }                                                                                                          
         }
         df_sig <- data.frame(correlation=list_cor_sig, bin=grp_sig, group="signal")
@@ -124,22 +150,23 @@ plot_signal_condition_exp <- function(cor_mat, ave_exp, signal) {
 plot_IQR_condition_exp <- function(IQR_list){
     IQR_cor_mat <- IQR_list$IQR_cor_mat
     grp_mean <- IQR_list$grp_mean
-    IQR_cor_mat2 <- round(IQR_cor_mat,3)
+    IQR_cor_mat2 <- round(IQR_cor_mat, 3)
     IQR_cor_mat <- IQR_cor_mat/max(IQR_cor_mat)
-    max_sd <- max(IQR_cor_mat)
-    sd_grps_offset_y <- t(matrix(rep(max_sd,100), nrow=10))
+    max_IQR <- max(IQR_cor_mat)
+    margin <- min(IQR_cor_mat)/10
+    sd_grps_offset_y <- t(matrix(rep(max_IQR,100), nrow=10))
     for(i in 2:10){
-        sd_grps_offset_y[i,] <- rep(max_sd,10)+sd_grps_offset_y[i-1,]+min(IQR_cor_mat)/10
+        sd_grps_offset_y[i,] <- max_IQR + sd_grps_offset_y[i-1,] + margin
     }
-    sd_grps_offset_x=t(matrix(rep(max_sd,100),nrow=10))
-    for(i in 2:10){
-        sd_grps_offset_x[,i]=t(rep(max_sd,10)+sd_grps_offset_y[i-1,])+min(IQR_cor_mat)/10
-    }
+    # sd_grps_offset_x=t(matrix(rep(max_sd,100),nrow=10))
+    #for(i in 2:10){
+    #    sd_grps_offset_x[,i]=t(rep(max_sd,10)+sd_grps_offset_y[i-1,])+min(IQR_cor_mat)/10
+    #}
     sd <- as.numeric(IQR_cor_mat)
     x1 <- as.numeric((-IQR_cor_mat/2)+sd_grps_offset_x)
     x2 <- as.numeric((IQR_cor_mat/2)+sd_grps_offset_x)
-    y1 <- as.numeric((-IQR_cor_mat/2)+sd_grps_offset_y)
-    y2 <- as.numeric((IQR_cor_mat/2)+sd_grps_offset_y)
+    y1 <- x1
+    y2 <- x2
     IQR_cor_mat <- round(IQR_cor_mat,3)
     d <- data.frame(x1,x2,y1,y2,sd)
 
