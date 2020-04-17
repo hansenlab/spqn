@@ -132,7 +132,6 @@ normalize_correlation <- function(cor_mat, ave_exp, ngrp, size_grp, ref_grp){
   stopifnot(is.matrix(cor_mat))
   stopifnot(nrow(cor_mat) == ncol(cor_mat), nrow(cor_mat) == length(ave_exp))
   
-  # rownames(cor_mat) <- colnames(cor_mat) <- seq_len(length(ave_exp))
   idx <- order(ave_exp)
   ngene <- length(ave_exp)
   ref_vec <- seq_len(ngene)
@@ -152,10 +151,6 @@ normalize_correlation <- function(cor_mat, ave_exp, ngrp, size_grp, ref_grp){
   ## Transform rank to cor_adj
   cor_est <- .est_cor(rank_bin, cor_ref)
   
-  # rownames_numeric <- as.numeric(rownames(cor_mat))
-  # colnames_numeric <- as.numeric(rownames(cor_mat))
-  # cor_est <- cor_est[order(rownames_numeric),
-  #                   order(colnames_numeric)]
   idx <- order(ref_vec_rearranged)
   cor_est <- cor_est[idx, idx]
   cor_est
