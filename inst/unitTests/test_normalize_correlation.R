@@ -6,7 +6,7 @@ test_normalize_correlation <- function(){
   cor_m <- cor(t(exp_mat))
 
   cor_m_spqn_test <- normalize_correlation(cor_m, ave_exp=ave_logrpkm, ngrp=20, size_grp=300, ref_grp=18)
-  checkEquals(cor_m_spqn_hash, .digest.matrix(cor_m_spqn_test))
+  checkEquals(cor_m_spqn_hash, .digestMatrix(cor_m_spqn_test))
 }
 
  
