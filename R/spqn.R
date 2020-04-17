@@ -15,9 +15,12 @@
         grp_label <- cut(idx, ngrp-1)
         grp_loc0 <- split(idx, grp_label)
         for(i in seq_len(ngrp-1)){
-            grp_loc[[i]] <- c(grp_loc0[[i]][1]:(grp_loc0[[i]][1]+size_grp-1))
+            id1 <- grp_loc0[[i]][1]
+            id2 <- grp_loc0[[i]][1]+size_grp-1
+            grp_loc[[i]] <- c(id1:id2)
         }
-        grp_loc[[ngrp]] <- c((ngene-size_grp+1):ngene)
+        id1 <- ngene-size_grp+1
+        grp_loc[[ngrp]] <- c(id1:ngene)
     }
     grp_loc
 }
@@ -32,10 +35,13 @@
     ngene <- max(grp_loc[[ngrp]])
     
     width_tmp <- grp_loc[[2]][1] - grp_loc[[1]][1]
-    grp_loc_inner[[1]] <- c(seq_len(round(size_bin/2+width_tmp/2)))
+    length_inner_1 <- round(size_bin/2 + width_tmp/2)
+    grp_loc_inner[[1]] <- seq_len(length_inner_1)
     
     for(i in 2:(ngrp-1)){
-        width_tmp <- grp_loc[[i+1]][1] - grp_loc[[i]][1]
+        id1 <- grp_loc[[i+1]][1]
+        id2 <- grp_loc[[i]][1]
+        width_tmp <- id1 - id2
         # grp_loc_inner[[i]] <- c( (tail(grp_loc_inner[[i-1]],1)+1) :(tail(grp_loc_inner[[i-1]],1) + width_tmp))
         tail <- tail(grp_loc_inner[[i-1]], 1)
         grp_loc_inner[[i]] <- (tail + 1):(tail + width_tmp)
@@ -71,10 +77,19 @@
             ## After scaling, rank_bin could contain non-integars
             rank_bin_pre[grp_loc[[i]], grp_loc[[j]]] <- rank_bin_tmp
             rank_replace <- rank_bin_pre[grp_loc_inner[[i]], grp_loc_inner[[j]]]
-            rank_bin_pre[grp_loc_inner[[i]],grp_loc_inner[[j]]] <-  1+((rank_replace-1)/(l_cor_tmp-n_diag-1) *(l_cor_tmp_ref-1))
-            rank_bin_pre[grp_loc_inner[[i]],grp_loc_inner[[j]]][which(rank_replace>l_cor_tmp_ref)] <- l_cor_tmp_ref
+            # scale the rank to range [0,1]
+            nreplace <- l_cor_tmp-n_diag-1
+            rank_replace <- (rank_replace-1)/ nreplace
+            # scale the rank to the same scale as the referent bin
+            rank_replace <- 1 + (rank_replace * (l_cor_tmp_ref-1))
+            # change the ranks that larger than the size of referent bin, to be the size of referent bin
+            rank_replace[which(rank_replace>l_cor_tmp_ref)] <- l_cor_tmp_ref
             
-            rank_bin[grp_loc_inner[[i]],grp_loc_inner[[j]]] <- rank_bin_pre[grp_loc_inner[[i]],grp_loc_inner[[j]]]
+            # rank_bin_pre[grp_loc_inner[[i]],grp_loc_inner[[j]]] <-  rank_replace
+            # rank_bin_pre[grp_loc_inner[[i]],grp_loc_inner[[j]]][which(rank_replace>l_cor_tmp_ref)] <- l_cor_tmp_ref
+       
+            rank_bin[grp_loc_inner[[i]],grp_loc_inner[[j]]] <- rank_replace
+            # rank_bin[grp_loc_inner[[i]],grp_loc_inner[[j]]] <- rank_bin_pre[grp_loc_inner[[i]],grp_loc_inner[[j]]]
         }
     }
     
