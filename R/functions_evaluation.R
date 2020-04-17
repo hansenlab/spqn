@@ -10,7 +10,7 @@ get_IQR_condition_exp <- function(cor_mat, ave_exp){
     cor_mat <- cor_mat[idx, idx]
     ave_exp <- ave_exp[idx]
     grp_loc <- get_grp_loc(cor_mat)
-    IQR_cor_mat= array(dim=c(10,10))
+    IQR_cor_mat <- array(dim=c(10,10))
     grp_mean <- array(dim=10)
     for(i in seq_len(10)) {
         cor_tmp <- cor_mat[grp_loc[[i]],grp_loc[[i]]]
@@ -23,7 +23,7 @@ get_IQR_condition_exp <- function(cor_mat, ave_exp){
         }
         grp_mean[i] <-  mean(ave_exp[grp_loc[[i]]])
     }
-    IQR_cor_mat[lower.tri(IQR_cor_mat)]= t(IQR_cor_mat)[lower.tri(IQR_cor_mat)]
+    IQR_cor_mat[lower.tri(IQR_cor_mat)]<- t(IQR_cor_mat)[lower.tri(IQR_cor_mat)]
     return(list(IQR_cor_mat=IQR_cor_mat,
                 grp_mean=grp_mean))
 }
