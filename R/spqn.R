@@ -84,7 +84,9 @@
 ##### Transform rank to cor_est
 .est_cor <- function(rank_bin, cor_ref){
     cor_adj <- array(dim=dim(rank_bin))
-    cor_ref_sorted <- sort(cor_ref[upper.tri(cor_ref)])
+    
+    cor_ref_upper_tri <- cor_ref[upper.tri(cor_ref)]
+    cor_ref_sorted <- sort(cor_ref_upper_tri)
     
     up_tri <- upper.tri(cor_adj)
     
@@ -100,7 +102,8 @@
 
     ## Find the correlations in the cor_ref corresponding to the two nearest ranks to rank_bin
     ## Estimate the correlation using weighted average based on the distance to rank_bin
-    rank_bin2[which(rank_bin2>length(cor_ref_sorted))] <- length(cor_ref_sorted)
+    length_cor_ref <- length(cor_ref_sorted)
+    rank_bin2[which(rank_bin2>length_cor_ref)] <- length_cor_ref
     cor_adj[up_tri] <- rank_bin_w1*cor_ref_sorted[rank_bin1]+ rank_bin_w2*cor_ref_sorted[rank_bin2]
 
     low_tri <- lower.tri(cor_adj)
@@ -118,7 +121,8 @@ normalize_correlation <- function(cor_mat, ave_exp, ngrp, size_grp, ref_grp){
     stopifnot(nrow(cor_mat) == ncol(cor_mat), nrow(cor_mat) == length(ave_exp))
 
     rownames(cor_mat) <- colnames(cor_mat) <- seq_len(length(ave_exp))
-    cor_mat <- cor_mat[order(ave_exp), order(ave_exp)]
+    idx <- order(ave_exp)
+    cor_mat <- cor_mat[idx, idx]
     
     group_loc <- .get_grps(cor_mat, ngrp, size_grp)
     
@@ -132,8 +136,10 @@ normalize_correlation <- function(cor_mat, ave_exp, ngrp, size_grp, ref_grp){
     ## Transform rank to cor_adj
     cor_est <- .est_cor(rank_bin, cor_ref)
     
-    cor_est <- cor_est[order(as.numeric(rownames(cor_mat))),
-                       order(as.numeric(colnames(cor_mat)))]
+    rownames_numeric <- as.numeric(rownames(cor_mat))
+    colnames_numeric <- as.numeric(rownames(cor_mat))
+    cor_est <- cor_est[order(rownames_numeric),
+                       order(colnames_numeric)]
     cor_est
 }
 
