@@ -11,9 +11,8 @@ License: Artistic-2.0
 Imports: graphics,
          stats,
 	 utils,
-	 matrixStats,
-	 WGCNA
-Depends: R (>= 3.6.3),
+	 matrixStats
+Depends: R (>= 4.0),
 	 ggplot2,
          ggridges,
 	 SummarizedExperiment
@@ -24,9 +23,7 @@ Suggests: BiocStyle,
 	  BiocGenerics,
 	  spqnData,
 	  digest,
-	  RUnit,
-	  hash,
-	  useful,
+	  RUnit
 VignetteBuilder: knitr
 URL: https://github.com/hansenlab/spqn
 BugReports: https://github.com/hansenlab/spqn/issues
