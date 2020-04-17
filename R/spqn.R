@@ -41,7 +41,6 @@
         id1 <- grp_loc[[i+1]][1]
         id2 <- grp_loc[[i]][1]
         width_tmp <- id1 - id2
-        # grp_loc_inner[[i]] <- c( (tail(grp_loc_inner[[i-1]],1)+1) :(tail(grp_loc_inner[[i-1]],1) + width_tmp))
         tail <- tail(grp_loc_inner[[i-1]], 1)
         grp_loc_inner[[i]] <- (tail + 1):(tail + width_tmp)
     }
