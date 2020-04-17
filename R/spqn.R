@@ -40,8 +40,8 @@
         tail <- tail(grp_loc_inner[[i-1]], 1)
         grp_loc_inner[[i]] <- (tail + 1):(tail + width_tmp)
     }
-    
-    grp_loc_inner[[ngrp]] <- c( (tail(grp_loc_inner[[ngrp-1]],1)+1) : ngene)
+    tail <- tail(grp_loc_inner[[ngrp-1]],1)
+    grp_loc_inner[[ngrp]] <- c((tail+1) : ngene)
     
     grp_loc_inner
 }
@@ -61,7 +61,8 @@
             rank_bin_tmp <- array(dim=dim(cor_bin_tmp))
             l_cor_tmp <- length(cor_bin_tmp)
             
-            rank_bin_tmp[seq_len(l_cor_tmp)] <- rank(cor_bin_tmp[seq_len(l_cor_tmp)])
+            idx <- seq_len(l_cor_tmp)
+            rank_bin_tmp[idx] <- rank(cor_bin_tmp[idx])
             
             ## Number of diagonals(of full correlation matrix) contained in the bin
             n_diag <- sum(grp_loc[[i]] %in% grp_loc[[j]])
