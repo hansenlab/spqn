@@ -11,7 +11,7 @@
         grp_loc <- split(idx, grp_label)
     }else{
         grp_loc <- vector(mode = "list", length = ngrp)
-        idx = seq_len(ngene-size_grp+1)
+        idx <- seq_len(ngene-size_grp+1)
         grp_label <- cut(idx, ngrp-1)
         grp_loc0 <- split(idx, grp_label)
         for(i in seq_len(ngrp-1)){
@@ -70,8 +70,9 @@
             ## Scale the rank of each bin to same scale as rank(cor_ref),
             ## After scaling, rank_bin could contain non-integars
             rank_bin_pre[grp_loc[[i]], grp_loc[[j]]] <- rank_bin_tmp
-            rank_bin_pre[grp_loc_inner[[i]],grp_loc_inner[[j]]] <-  1+((rank_bin_pre[grp_loc_inner[[i]], grp_loc_inner[[j]]]-1)/(l_cor_tmp-n_diag-1) *(l_cor_tmp_ref-1))
-            rank_bin_pre[grp_loc_inner[[i]],grp_loc_inner[[j]]][which(rank_bin_pre[grp_loc_inner[[i]],grp_loc_inner[[j]]]>l_cor_tmp_ref)] <- l_cor_tmp_ref
+            rank_replace <- rank_bin_pre[grp_loc_inner[[i]], grp_loc_inner[[j]]]
+            rank_bin_pre[grp_loc_inner[[i]],grp_loc_inner[[j]]] <-  1+((rank_replace-1)/(l_cor_tmp-n_diag-1) *(l_cor_tmp_ref-1))
+            rank_bin_pre[grp_loc_inner[[i]],grp_loc_inner[[j]]][which(rank_replace>l_cor_tmp_ref)] <- l_cor_tmp_ref
             
             rank_bin[grp_loc_inner[[i]],grp_loc_inner[[j]]] <- rank_bin_pre[grp_loc_inner[[i]],grp_loc_inner[[j]]]
         }
