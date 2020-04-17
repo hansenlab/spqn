@@ -124,35 +124,40 @@
     diag(cor_adj) <- 1
     cor_adj
 }
-
 normalize_correlation <- function(cor_mat, ave_exp, ngrp, size_grp, ref_grp){
-    ## stopifnot(is.integer(ngrp), is.integer(size_grp), is.integer(ref_grp))
-    stopifnot(length(ngrp) == 1, length(size_grp) == 1, length(ref_grp) == 1)
-    stopifnot(ref_grp <= ngrp)
-    stopifnot(0 < ngrp, 0 < size_grp, 0 < ref_grp)
-    stopifnot(is.matrix(cor_mat))
-    stopifnot(nrow(cor_mat) == ncol(cor_mat), nrow(cor_mat) == length(ave_exp))
-
-    rownames(cor_mat) <- colnames(cor_mat) <- seq_len(length(ave_exp))
-    idx <- order(ave_exp)
-    cor_mat <- cor_mat[idx, idx]
-    
-    group_loc <- .get_grps(cor_mat, ngrp, size_grp)
-    
-    ## Asssign inner bins
-    group_loc_adj <- .get_grps_inner(group_loc)
-    
-    ## Get rank for each running bin
-    cor_ref <- cor_mat[group_loc[[ref_grp]], group_loc[[ref_grp]]]
-    rank_bin <- .get_bin_rank(cor_mat, group_loc, group_loc_adj, cor_ref)
-    
-    ## Transform rank to cor_adj
-    cor_est <- .est_cor(rank_bin, cor_ref)
-    
-    rownames_numeric <- as.numeric(rownames(cor_mat))
-    colnames_numeric <- as.numeric(rownames(cor_mat))
-    cor_est <- cor_est[order(rownames_numeric),
-                       order(colnames_numeric)]
-    cor_est
+  ## stopifnot(is.integer(ngrp), is.integer(size_grp), is.integer(ref_grp))
+  stopifnot(length(ngrp) == 1, length(size_grp) == 1, length(ref_grp) == 1)
+  stopifnot(ref_grp <= ngrp)
+  stopifnot(0 < ngrp, 0 < size_grp, 0 < ref_grp)
+  stopifnot(is.matrix(cor_mat))
+  stopifnot(nrow(cor_mat) == ncol(cor_mat), nrow(cor_mat) == length(ave_exp))
+  
+  # rownames(cor_mat) <- colnames(cor_mat) <- seq_len(length(ave_exp))
+  idx <- order(ave_exp)
+  ngene <- length(ave_exp)
+  ref_vec <- seq_len(ngene)
+  
+  cor_mat <- cor_mat[idx, idx]
+  ref_vec_rearranged <- ref_vec[idx]
+  
+  group_loc <- .get_grps(cor_mat, ngrp, size_grp)
+  
+  ## Asssign inner bins
+  group_loc_adj <- .get_grps_inner(group_loc)
+  
+  ## Get rank for each running bin
+  cor_ref <- cor_mat[group_loc[[ref_grp]], group_loc[[ref_grp]]]
+  rank_bin <- .get_bin_rank(cor_mat, group_loc, group_loc_adj, cor_ref)
+  
+  ## Transform rank to cor_adj
+  cor_est <- .est_cor(rank_bin, cor_ref)
+  
+  # rownames_numeric <- as.numeric(rownames(cor_mat))
+  # colnames_numeric <- as.numeric(rownames(cor_mat))
+  # cor_est <- cor_est[order(rownames_numeric),
+  #                   order(colnames_numeric)]
+  idx <- order(ref_vec_rearranged)
+  cor_est <- cor_est[idx, idx]
+  cor_est
 }
 
