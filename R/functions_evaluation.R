@@ -79,6 +79,7 @@ plot_signal_condition_exp <- function(cor_mat, ave_exp, signal) {
         list_cor_sig <- grp_sig <- numeric(10*nsignal_grp)
         nbackground_group <- lapply(grp_locs, function(ii){length(ii)*(length(ii)-1)/2})
         list_cor_back <- grp_back <- numeric(sum(nbackground_group))
+        list_cor_back_cumulate <- apply(as.matrix(1:10),1,function(ii){sum(nbackground_group[1:ii])})
         for(ngrp in seq_len(10)) {
             loc_back <- grp_locs[[ngrp]]
             cor_back <- cor_mat[loc_back,loc_back]
@@ -90,11 +91,11 @@ plot_signal_condition_exp <- function(cor_mat, ave_exp, signal) {
             grp_sig[((i-1)*nsignal_grp+1):i*nsignal_grp] <- rep(ngrp, length(cor_signal_ori)
 
             if(i==1){
-                list_cor_back[1, nbackground_group[i]] <- cor_back
-                grp_back[1, nbackground_group[i]] <- rep(ngrp, length(cor_back))
+                list_cor_back[1, list_cor_back_cumulate[i]] <- cor_back
+                grp_back[1, list_cor_back_cumulate[i]] <- rep(ngrp, length(cor_back))
             }else{
-                list_cor_back[nbackground_group[i-1]+1, nbackground_group[i]] <- cor_back
-                grp_back[nbackground_group[i-1]+1, nbackground_group[i]] <- rep(ngrp, length(cor_back))
+                list_cor_back[list_cor_back_cumulate[i-1]+1, list_cor_back_cumulate[i]] <- cor_back
+                grp_back[list_cor_back_cumulate[i-1]+1, list_cor_back_cumulate[i]] <- rep(ngrp, nbackground_group[i])
             }                                                                                                          
         }
         df_sig <- data.frame(correlation=list_cor_sig, bin=grp_sig, group="signal")
