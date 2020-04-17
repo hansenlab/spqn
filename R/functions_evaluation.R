@@ -92,10 +92,10 @@ plot_signal_condition_exp <- function(cor_mat, ave_exp, signal) {
       geom_density_ridges2(fill="blue") +
       theme_ridges( grid = TRUE) + theme(axis.title.x = element_blank()) + 
       geom_vline(xintercept = 0, linetype="dotted", color = "black", size=0.3)
-    }else{
+  }else{
     ncor <- length(which(upper.tri(cor_mat)))
     nsignal <- ncor*signal
-    nsignal_grp <- nsignal/100
+    nsignal_grp <- round(nsignal/100)
     
     # list_cor_sig <- list_cor_back <- grp_back <- grp_sig <- c()
     grp_locs <- get_grp_loc(cor_mat)
@@ -118,19 +118,19 @@ plot_signal_condition_exp <- function(cor_mat, ave_exp, signal) {
       idx2 <- ngrp*nsignal_grp
       idx <- c(idx1 : idx2)
       list_cor_sig[idx] <- cor_signal_ori
-      grp_sig[idx] <- rep(ngrp, length(cor_signal_ori))
-                          
+      grp_sig[idx] <- ngrp
+      
       if(ngrp==1){
-          idx <- seq_len(list_cor_back_cumulate[ngrp])
-          list_cor_back[idx] <- cor_back
-          grp_back[idx] <- rep(ngrp, length(cor_back))
+        idx <- seq_len(list_cor_back_cumulate[ngrp])
+        list_cor_back[idx] <- cor_back
+        grp_back[idx] <- ngrp
       }else{
-      idx1 <- list_cor_back_cumulate[ngrp-1]+1
-      idx2 <- list_cor_back_cumulate[ngrp]
-      idx <- c(idx1:idx2)
-      list_cor_back[idx] <- cor_back
-      grp_back[idx] <- rep(ngrp, nbackground_group[ngrp])
-                          }                                                                                                          
+        idx1 <- list_cor_back_cumulate[ngrp-1]+1
+        idx2 <- list_cor_back_cumulate[ngrp]
+        idx <- c(idx1:idx2)
+        list_cor_back[idx] <- cor_back
+        grp_back[idx] <- ngrp
+      }                                                                                                          
     }
     df_sig <- data.frame(correlation=list_cor_sig, bin=grp_sig, group="signal")
     df_back <- data.frame(correlation=list_cor_back, bin=grp_back, group="background")
