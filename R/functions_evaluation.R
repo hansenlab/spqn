@@ -23,7 +23,8 @@ get_IQR_condition_exp <- function(cor_mat, ave_exp){
         }
         grp_mean[i] <-  mean(ave_exp[grp_loc[[i]]])
     }
-    IQR_cor_mat[lower.tri(IQR_cor_mat)]<- t(IQR_cor_mat)[lower.tri(IQR_cor_mat)]
+    idx <- lower.tri(IQR_cor_mat)
+    IQR_cor_mat[idx]<- t(IQR_cor_mat)[idx]
     return(list(IQR_cor_mat=IQR_cor_mat,
                 grp_mean=grp_mean))
 }
