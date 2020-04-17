@@ -8,6 +8,8 @@ test_normalize_correlation <- function(){
   cor_m_spqn_test <- normalize_correlation(cor_m, ave_exp=ave_logrpkm, ngrp=20, size_grp=300, ref_grp=18)
   idx <- seq_len(500)
   cor_m_spqn_test_sample <- cor_m_spqn_test[idx, idx]
+  cor_m_spqn_test_sample = round(cor_m_spqn_test_sample,4)
+
   checkEquals(cor_m_spqn_sample, cor_m_spqn_test_sample)
 }
 
