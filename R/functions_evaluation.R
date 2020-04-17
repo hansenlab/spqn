@@ -67,7 +67,8 @@ plot_signal_condition_exp <- function(cor_mat, ave_exp, signal) {
     length_group <- length_group*(length_group-1)/2
     length_group_cumulate <- cumsum(length_group)
     
-    cor_vec_all <- data.frame(matrix(ncol = 2, nrow = length_group_cumulate[10]))
+    cor_vec_all <- data.frame(matrix(ncol = 2, 
+                                     nrow = length_group_cumulate[10]))
     colnames(cor_vec_all) <- c("correlation",  "group")
     
     for(i in seq_len(10)) {
@@ -129,11 +130,11 @@ plot_signal_condition_exp <- function(cor_mat, ave_exp, signal) {
         idx2 <- list_cor_back_cumulate[ngrp]
         idx <- c(idx1:idx2)
         list_cor_back[idx] <- cor_back
-        grp_back[idx] <- ngrp
-      }                                                                                                          
+        grp_back[idx] <- ngrp }                                                                                                       
     }
     df_sig <- data.frame(correlation=list_cor_sig, bin=grp_sig, group="signal")
-    df_back <- data.frame(correlation=list_cor_back, bin=grp_back, group="background")
+    df_back <- data.frame(correlation=list_cor_back, 
+                          bin=grp_back, group="background")
     df_merge <- rbind(df_sig,df_back)
     df_merge$bin_group  <-  paste(df_merge$bin, df_merge$group)
     ggplot(df_merge, aes_string(y = "bin")) +
@@ -175,11 +176,13 @@ plot_IQR_condition_exp <- function(IQR_list){
   d <- data.frame(x1,x2,y1,y2,sd)
   
   ggplot() + 
-    geom_rect(data=d, mapping=aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2), color="black", alpha=0) +
-    xlab("average(log2RPKM)")+ylab("average(log2RPKM)")   +
+    geom_rect(data=d, mapping=aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2), 
+              color="black", alpha=0) +
+    xlab("average(log2RPKM)")+ylab("average(log2RPKM)") +
     scale_y_discrete(limits=c(seq_len(10))+c(0:9)*min(IQR_cor_mat)/10,
-                     labels=round(grp_mean,1))+
+                     labels=round(grp_mean,1)) +
     scale_x_discrete(limits=c(seq_len(10))+c(0:9)*min(IQR_cor_mat)/10,
-                     labels=round(grp_mean,1)) + theme_bw()+
-    theme(axis.title.x = element_text(size=20),axis.title.y = element_text(size=20),axis.text=element_text(size=20))
+                     labels=round(grp_mean,1)) + theme_bw() +
+    theme(axis.title.x = element_text(size=20),axis.title.y = element_text(size=20),
+          axis.text=element_text(size=20))
 }
