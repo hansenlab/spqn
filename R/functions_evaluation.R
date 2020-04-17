@@ -73,8 +73,12 @@ plot_signal_condition_exp <- function(cor_mat, ave_exp, signal) {
         ncor <- length(which(upper.tri(cor_mat)))
         nsignal <- ncor*signal
         nsignal_grp <- nsignal/100
-        list_cor_sig <- list_cor_back <- grp_back <- grp_sig <- c()
+
+        # list_cor_sig <- list_cor_back <- grp_back <- grp_sig <- c()
         grp_locs <- get_grp_loc(cor_mat)
+        list_cor_sig <- grp_sig <- numeric(10*nsignal_grp)
+        nbackground_group <- lapply(grp_locs, function(ii){length(ii)*(length(ii)-1)/2})
+        list_cor_back <- grp_back <- numeric(sum(nbackground_group))
         for(ngrp in seq_len(10)) {
             loc_back <- grp_locs[[ngrp]]
             cor_back <- cor_mat[loc_back,loc_back]
@@ -82,10 +86,16 @@ plot_signal_condition_exp <- function(cor_mat, ave_exp, signal) {
             order_cor_ori_grp <- order(abs(cor_back), decreasing=TRUE)
             cor_signal_ori <- cor_back[order_cor_ori_grp[seq_len(nsignal_grp)]]
     
-            list_cor_sig <- c(list_cor_sig,cor_signal_ori)
-            list_cor_back <- c(list_cor_back, cor_back)
-            grp_back <- c(grp_back, rep(ngrp, length(cor_back)))
-            grp_sig <- c(grp_sig, rep(ngrp, length(cor_signal_ori)))
+            list_cor_sig[((i-1)*nsignal_grp+1) : i*nsignal_grp] <- cor_signal_ori
+            grp_sig[((i-1)*nsignal_grp+1):i*nsignal_grp] <- rep(ngrp, length(cor_signal_ori)
+
+            if(i==1){
+                list_cor_back[1, nbackground_group[i]] <- cor_back
+                grp_back[1, nbackground_group[i]] <- rep(ngrp, length(cor_back))
+            }else{
+                list_cor_back[nbackground_group[i-1]+1, nbackground_group[i]] <- cor_back
+                grp_back[nbackground_group[i-1]+1, nbackground_group[i]] <- rep(ngrp, length(cor_back))
+            }                                                                                                          
         }
         df_sig <- data.frame(correlation=list_cor_sig, bin=grp_sig, group="signal")
         df_back <- data.frame(correlation=list_cor_back, bin=grp_back, group="background")
