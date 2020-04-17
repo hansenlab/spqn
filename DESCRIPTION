@@ -25,7 +25,8 @@ Suggests: BiocStyle,
 	  digest,
 	  RUnit,
 	  hash,
-	  useful
+	  useful,
+	  testthat
 VignetteBuilder: knitr
 URL: https://github.com/hansenlab/spqn
 BugReports: https://github.com/hansenlab/spqn/issues
