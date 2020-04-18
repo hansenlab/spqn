@@ -21,7 +21,7 @@ Suggests: BiocStyle,
 	  rmarkdown,
 	  tools,
 	  BiocGenerics,
-	  spqnData,
+	  spqnData (>= 0.99.3),
 	  RUnit
 VignetteBuilder: knitr
 URL: https://github.com/hansenlab/spqn
